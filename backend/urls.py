@@ -18,6 +18,7 @@ from django.urls import path, include
 from app.views import CustomerList, CustomerDetail
 from app.views import ProductList, ProductDetail
 from app.views import AcountBalanceDetail
+from app.views import InvoiceList, InvoiceDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -29,4 +30,6 @@ urlpatterns = [
     path('api/product/', ProductList.as_view()),
     path('api/product/<product_id>/', ProductDetail.as_view()),
     path('api/balance/<user_id>/', AcountBalanceDetail.as_view()),
+    path('api/invoice/<user_id>/', InvoiceList.as_view()),
+    path('api/invoice/<user_id>/<invoice_number>/', InvoiceDetail.as_view()),
 ]

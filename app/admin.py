@@ -10,6 +10,8 @@ from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
 from app.models import AccountBalance
+from app.models import Invoices
+from app.models import InvoiceItems
 
 
 # Unregister models
@@ -22,6 +24,7 @@ class UserCreateForm(ModelForm):
 	class Meta:
 		model = User
 		fields = ('email',)
+
 
 class UserInline(admin.StackedInline):
 	model = UserInfo
@@ -60,9 +63,18 @@ class UserAdmin(BaseUserAdmin):
     get_user_type.short_description = 'Tipo de Usuario'
 
 
+class InvoiceItemsInline(admin.TabularInline):
+	model = InvoiceItems
+	verbose_name_plural = 'Productos'
+	extra = 1
+
+
+class InvoiceAdmin(admin.ModelAdmin):
+    inlines = (InvoiceItemsInline, )
 
 
 admin.site.register(User, UserAdmin)
 admin.site.register(Customer)
 admin.site.register(Products)
 admin.site.register(AccountBalance)
+admin.site.register(Invoices, InvoiceAdmin)

@@ -49,7 +49,7 @@ class Invoices(models.Model):
 
 
 class InvoiceItems(models.Model):
-    invoice_number = models.ForeignKey(Invoices, to_field='number', on_delete=models.CASCADE, verbose_name='Número de Factura')
+    invoice_number = models.ForeignKey(Invoices, to_field='number', on_delete=models.CASCADE, verbose_name='Número de Factura', related_name='items')
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Código de Producto')
     price = models.FloatField(verbose_name='Precio')
     quantity = models.FloatField(verbose_name='Cantidad')
