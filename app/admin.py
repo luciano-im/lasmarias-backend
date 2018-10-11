@@ -7,6 +7,8 @@ from django.forms import ModelForm
 from django import forms
 
 from app.models import UserInfo
+from app.models import Customer
+from app.models import Products
 
 
 # Unregister models
@@ -44,7 +46,7 @@ class UserAdmin(BaseUserAdmin):
     )
 
     def get_customer(self, obj):
-        return obj.userinfo.customer.first_name
+        return obj.userinfo.customer_id.first_name
 
     def get_customer_id(self, obj):
         return obj.userinfo.customer_id
@@ -60,3 +62,5 @@ class UserAdmin(BaseUserAdmin):
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(Customer)
+admin.site.register(Products)
