@@ -12,6 +12,7 @@ from app.models import Products
 from app.models import AccountBalance
 from app.models import Invoices
 from app.models import InvoiceItems
+from app.models import OrderStates
 
 
 # Unregister models
@@ -78,3 +79,4 @@ admin.site.register(Customer)
 admin.site.register(Products)
 admin.site.register(AccountBalance)
 admin.site.register(Invoices, InvoiceAdmin)
+admin.site.register(OrderStates)

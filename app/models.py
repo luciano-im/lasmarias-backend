@@ -74,6 +74,18 @@ class AccountBalance(models.Model):
         verbose_name_plural = 'Saldos de Cuenta Corriente'
 
 
+class OrderStates(models.Model):
+    state = models.CharField(primary_key=True, max_length=30, verbose_name='Estado')
+    order = models.IntegerField(verbose_name='Orden')
+
+    def __unicode__(self):
+        return self.state
+
+    class Meta:
+        verbose_name = 'Estado de Pedidos'
+        verbose_name_plural = 'Estados de Pedidos'
+
+
 class UserInfo(models.Model):
     USER_TYPE = (
         ('VEN', 'Vendedor'),
