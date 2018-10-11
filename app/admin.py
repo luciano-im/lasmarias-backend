@@ -9,6 +9,7 @@ from django import forms
 from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
+from app.models import AccountBalance
 
 
 # Unregister models
@@ -64,3 +65,4 @@ class UserAdmin(BaseUserAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Customer)
 admin.site.register(Products)
+admin.site.register(AccountBalance)

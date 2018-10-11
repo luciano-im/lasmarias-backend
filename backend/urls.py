@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, include
 from app.views import CustomerList, CustomerDetail
 from app.views import ProductList, ProductDetail
+from app.views import AcountBalanceDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -27,4 +28,5 @@ urlpatterns = [
     path('api/customer/<user_id>/', CustomerDetail.as_view()),
     path('api/product/', ProductList.as_view()),
     path('api/product/<product_id>/', ProductDetail.as_view()),
+    path('api/balance/<user_id>/', AcountBalanceDetail.as_view()),
 ]
