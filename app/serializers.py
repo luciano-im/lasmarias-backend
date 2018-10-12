@@ -5,6 +5,8 @@ from app.models import Products
 from app.models import AccountBalance
 from app.models import InvoiceItems
 from app.models import Invoices
+from app.models import OrderItems
+from app.models import Order
 
 
 class CustomerSerializer(serializers.ModelSerializer):
@@ -37,3 +39,24 @@ class InvoiceSerializer(serializers.ModelSerializer):
     class Meta:
         model = Invoices
         fields = ('number', 'customer_id', 'date', 'items')
+
+
+class OrderItemsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = OrderItems
+        fields = ('product_id', 'price', 'quantity')
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    items = OrderItemsSerializer(many=True)
+
+    class Meta:
+        model = Order
+        fields = ('order_id', 'user_id', 'customer_id', 'status', 'payment', 'date', 'discount', 'shipping', 'items')
+
+    def create(self, validated_data):
+        items = validated_data.pop('items')
+        order = Order.objects.create(**validated_data)
+        for item in items:
+            OrderItems.objects.create(order_id=order, **item)
+        return order

@@ -74,16 +74,65 @@ class AccountBalance(models.Model):
         verbose_name_plural = 'Saldos de Cuenta Corriente'
 
 
-class OrderStates(models.Model):
-    state = models.CharField(primary_key=True, max_length=30, verbose_name='Estado')
-    order = models.IntegerField(verbose_name='Orden')
+class PaymentMethods(models.Model):
+    payment = models.CharField(primary_key=True, max_length=50, verbose_name='Método de Pago')
+    sort = models.IntegerField(verbose_name='Orden')
 
     def __unicode__(self):
-        return self.state
+        return self.payment
+
+    class Meta:
+        verbose_name = 'Métodos de Pago'
+        verbose_name_plural = 'Métodos de Pago'
+
+
+class OrderStatus(models.Model):
+    status = models.CharField(primary_key=True, max_length=30, verbose_name='Estado')
+    sort = models.IntegerField(verbose_name='Orden')
+
+    def __unicode__(self):
+        return self.status
 
     class Meta:
         verbose_name = 'Estado de Pedidos'
-        verbose_name_plural = 'Estados de Pedidos'
+        verbose_name_plural = 'Estado de Pedidos'
+
+
+class Order(models.Model):
+    SHIPPING_TYPE = (
+        ('ENV', 'Envío'),
+        ('REL', 'Retiro en Local'),
+    )
+
+    order_id = models.IntegerField(primary_key=True, verbose_name='Código de Pedido')
+    user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
+    status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, verbose_name='Estado')
+    payment = models.ForeignKey(PaymentMethods, on_delete=models.CASCADE, verbose_name='Método de Pago')
+    date = models.DateField(verbose_name='Fecha del Pedido')
+    discount = models.FloatField(verbose_name='Descuento', help_text='%')
+    shipping = models.CharField(max_length=3, choices=SHIPPING_TYPE, verbose_name='Tipo de Envío')
+
+    def __unicode__(self):
+        return self.order_id
+
+    class Meta:
+        verbose_name = 'Pedido'
+        verbose_name_plural = 'Pedidos'
+
+
+class OrderItems(models.Model):
+    order_id = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Código de Pedido', related_name='items')
+    product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Código de Producto')
+    price = models.FloatField(verbose_name='Precio')
+    quantity = models.FloatField(verbose_name='Cantidad')
+
+    def __unicode__(self):
+        return self.order_id
+
+    class Meta:
+        verbose_name = 'Item'
+        verbose_name_plural = 'Items de Pedidos'
 
 
 class UserInfo(models.Model):
@@ -95,7 +144,7 @@ class UserInfo(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
-    user_type = models.CharField(max_length=3,choices=USER_TYPE, verbose_name='Tipo de Usuario')
+    user_type = models.CharField(max_length=3, choices=USER_TYPE, verbose_name='Tipo de Usuario')
 
     def __unicode__(self):
         return self.customer_id

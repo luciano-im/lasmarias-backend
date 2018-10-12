@@ -12,7 +12,10 @@ from app.models import Products
 from app.models import AccountBalance
 from app.models import Invoices
 from app.models import InvoiceItems
-from app.models import OrderStates
+from app.models import OrderStatus
+from app.models import PaymentMethods
+from app.models import Order
+from app.models import OrderItems
 
 
 # Unregister models
@@ -74,9 +77,21 @@ class InvoiceAdmin(admin.ModelAdmin):
     inlines = (InvoiceItemsInline, )
 
 
+class OrderItemsInline(admin.TabularInline):
+	model = OrderItems
+	verbose_name_plural = 'Productos'
+	extra = 1
+
+
+class OrderAdmin(admin.ModelAdmin):
+    inlines = (OrderItemsInline, )
+
+
 admin.site.register(User, UserAdmin)
 admin.site.register(Customer)
 admin.site.register(Products)
 admin.site.register(AccountBalance)
 admin.site.register(Invoices, InvoiceAdmin)
-admin.site.register(OrderStates)
+admin.site.register(OrderStatus)
+admin.site.register(PaymentMethods)
+admin.site.register(Order, OrderAdmin)

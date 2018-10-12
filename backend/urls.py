@@ -19,6 +19,7 @@ from app.views import CustomerList, CustomerDetail
 from app.views import ProductList, ProductDetail
 from app.views import AcountBalanceDetail
 from app.views import InvoiceList, InvoiceDetail
+from app.views import OrderList, OrderDetail
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -32,4 +33,6 @@ urlpatterns = [
     path('api/balance/<user_id>/', AcountBalanceDetail.as_view()),
     path('api/invoice/<user_id>/', InvoiceList.as_view()),
     path('api/invoice/<user_id>/<invoice_number>/', InvoiceDetail.as_view()),
+    path('api/order/<user_id>/', OrderList.as_view()),
+    path('api/order/<user_id>/<order_id>/', OrderDetail.as_view()),
 ]
