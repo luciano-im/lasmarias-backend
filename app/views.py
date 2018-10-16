@@ -68,7 +68,7 @@ class InvoiceDetail(generics.ListAPIView):
         return Invoices.objects.filter(customer_id=user_id, number=invoice_number)
 
 
-class OrderList(generics.ListAPIView):
+class OrderList(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
 
     def get_queryset(self):
@@ -76,8 +76,9 @@ class OrderList(generics.ListAPIView):
         return Order.objects.filter(customer_id=user_id)
 
 
-class OrderDetail(generics.ListAPIView):
+class OrderDetail(generics.RetrieveUpdateAPIView):
     serializer_class = OrderSerializer
+    lookup_field = 'order_id'
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']

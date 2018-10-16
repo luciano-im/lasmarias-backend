@@ -60,3 +60,24 @@ class OrderSerializer(serializers.ModelSerializer):
         for item in items:
             OrderItems.objects.create(order_id=order, **item)
         return order
+
+    def update(self, instance, validated_data):
+        items_data = validated_data.pop('items')
+        items = (instance.items).all()
+        items = list(items)
+        instance.user_id = validated_data.get('user_id', instance.user_id)
+        instance.customer_id = validated_data.get('customer_id', instance.customer_id)
+        instance.status = validated_data.get('status', instance.status)
+        instance.payment = validated_data.get('payment', instance.payment)
+        instance.date = validated_data.get('date', instance.date)
+        instance.discount = validated_data.get('discount', instance.discount)
+        instance.shipping = validated_data.get('shipping', instance.shipping)
+        instance.save()
+
+        for item_data in items_data:
+            item = items.pop(0)
+            item.product_id = item_data.get('product_id', item.product_id)
+            item.price = item_data.get('price', item.price)
+            item.quantity = item_data.get('quantity', item.quantity)
+            item.save()
+        return instance

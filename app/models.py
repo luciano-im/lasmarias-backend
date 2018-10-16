@@ -104,7 +104,7 @@ class Order(models.Model):
         ('REL', 'Retiro en Local'),
     )
 
-    order_id = models.IntegerField(primary_key=True, verbose_name='Código de Pedido')
+    order_id = models.AutoField(primary_key=True, verbose_name='Código de Pedido')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
     status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, verbose_name='Estado')
