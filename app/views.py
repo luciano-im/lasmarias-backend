@@ -1,6 +1,7 @@
 from django.shortcuts import render
 
 from rest_framework import generics
+from rest_framework.permissions import IsAuthenticated
 
 from app.models import Customer
 from app.models import Products
@@ -18,12 +19,12 @@ from app.serializers import OrderSerializer
 class CustomerList(generics.ListAPIView):
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
-    #permission_classes = (IsAdminUser,)
-    #authentication_classes = (authentication.TokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
 
 
 class CustomerDetail(generics.ListAPIView):
     serializer_class = CustomerSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -33,10 +34,12 @@ class CustomerDetail(generics.ListAPIView):
 class ProductList(generics.ListAPIView):
     queryset = Products.objects.all()
     serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticated,)
 
 
 class ProductDetail(generics.ListAPIView):
     serializer_class = ProductSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         product_id = self.kwargs['product_id']
@@ -45,6 +48,7 @@ class ProductDetail(generics.ListAPIView):
 
 class AcountBalanceDetail(generics.ListAPIView):
     serializer_class = AccountBalanceSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -53,6 +57,7 @@ class AcountBalanceDetail(generics.ListAPIView):
 
 class InvoiceList(generics.ListAPIView):
     serializer_class = InvoiceSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -61,6 +66,7 @@ class InvoiceList(generics.ListAPIView):
 
 class InvoiceDetail(generics.ListAPIView):
     serializer_class = InvoiceSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -70,6 +76,7 @@ class InvoiceDetail(generics.ListAPIView):
 
 class OrderList(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
@@ -78,6 +85,7 @@ class OrderList(generics.ListCreateAPIView):
 
 class OrderDetail(generics.RetrieveUpdateAPIView):
     serializer_class = OrderSerializer
+    permission_classes = (IsAuthenticated,)
     lookup_field = 'order_id'
 
     def get_queryset(self):
