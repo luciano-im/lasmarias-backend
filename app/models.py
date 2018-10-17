@@ -10,8 +10,8 @@ class Customer(models.Model):
     telephone = models.CharField(max_length=15, verbose_name='Teléfono')
     discount = models.FloatField(verbose_name='Descuento', help_text='%')
 
-    def __unicode__(self):
-        return self.first_name
+    def __str__(self):
+        return self.first_name + ' ' + self.last_name
 
     class Meta:
         verbose_name = 'Cliente'
@@ -27,7 +27,7 @@ class Products(models.Model):
     price = models.FloatField(verbose_name='Precio')
     # image = models.ImageField(verbose_name='Imágen del Producto')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
     class Meta:
@@ -40,8 +40,11 @@ class Invoices(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
     date = models.DateField(verbose_name='Fecha de Factura')
 
-    def __unicode__(self):
-        return self.number
+    def get_total(self):
+        return sum(item.get_cost() for item in self.items.all())
+
+    def __str__(self):
+        return str(self.number)
 
     class Meta:
         verbose_name = 'Factura'
@@ -54,8 +57,11 @@ class InvoiceItems(models.Model):
     price = models.FloatField(verbose_name='Precio')
     quantity = models.FloatField(verbose_name='Cantidad')
 
-    def __unicode__(self):
-        return self.invoice_number
+    def get_cost(self):
+        return self.price * self.quantity
+
+    def __str__(self):
+        return str(self.invoice_number)
 
     class Meta:
         verbose_name = 'Item'
@@ -66,7 +72,7 @@ class AccountBalance(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
     balance = models.FloatField(verbose_name='Saldo Final')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.customer_id
 
     class Meta:
@@ -78,7 +84,7 @@ class PaymentMethods(models.Model):
     payment = models.CharField(primary_key=True, max_length=50, verbose_name='Método de Pago')
     sort = models.IntegerField(verbose_name='Orden')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.payment
 
     class Meta:
@@ -90,7 +96,7 @@ class OrderStatus(models.Model):
     status = models.CharField(primary_key=True, max_length=30, verbose_name='Estado')
     sort = models.IntegerField(verbose_name='Orden')
 
-    def __unicode__(self):
+    def __str__(self):
         return self.status
 
     class Meta:
@@ -113,7 +119,10 @@ class Order(models.Model):
     discount = models.FloatField(verbose_name='Descuento', help_text='%')
     shipping = models.CharField(max_length=3, choices=SHIPPING_TYPE, verbose_name='Tipo de Envío')
 
-    def __unicode__(self):
+    def get_total(self):
+        return sum(item.get_cost() for item in self.items.all())
+
+    def __str__(self):
         return self.order_id
 
     class Meta:
@@ -127,7 +136,10 @@ class OrderItems(models.Model):
     price = models.FloatField(verbose_name='Precio')
     quantity = models.FloatField(verbose_name='Cantidad')
 
-    def __unicode__(self):
+    def get_cost(self):
+        return self.price * self.quantity
+
+    def __str__(self):
         return self.order_id
 
     class Meta:
@@ -146,8 +158,8 @@ class UserInfo(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
     user_type = models.CharField(max_length=3, choices=USER_TYPE, verbose_name='Tipo de Usuario')
 
-    def __unicode__(self):
-        return self.customer_id
+    def __str__(self):
+        return self.user
 
     class Meta:
         verbose_name = 'Usuario'
