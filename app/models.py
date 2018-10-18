@@ -11,7 +11,7 @@ class Customer(models.Model):
     discount = models.FloatField(verbose_name='Descuento', help_text='%')
 
     def __str__(self):
-        return self.first_name + ' ' + self.last_name
+        return str(self.first_name + ' ' + self.last_name)
 
     class Meta:
         verbose_name = 'Cliente'
@@ -28,7 +28,7 @@ class Products(models.Model):
     # image = models.ImageField(verbose_name='Imágen del Producto')
 
     def __str__(self):
-        return self.name
+        return str(self.name)
 
     class Meta:
         verbose_name = 'Producto'
@@ -73,7 +73,7 @@ class AccountBalance(models.Model):
     balance = models.FloatField(verbose_name='Saldo Final')
 
     def __str__(self):
-        return self.customer_id
+        return str(self.customer_id)
 
     class Meta:
         verbose_name = 'Saldo de Cuenta Corriente'
@@ -85,7 +85,7 @@ class PaymentMethods(models.Model):
     sort = models.IntegerField(verbose_name='Orden')
 
     def __str__(self):
-        return self.payment
+        return str(self.payment)
 
     class Meta:
         verbose_name = 'Métodos de Pago'
@@ -97,7 +97,7 @@ class OrderStatus(models.Model):
     sort = models.IntegerField(verbose_name='Orden')
 
     def __str__(self):
-        return self.status
+        return str(self.status)
 
     class Meta:
         verbose_name = 'Estado de Pedidos'
@@ -123,7 +123,7 @@ class Order(models.Model):
         return sum(item.get_cost() for item in self.items.all())
 
     def __str__(self):
-        return self.order_id
+        return str(self.order_id)
 
     class Meta:
         verbose_name = 'Pedido'
@@ -140,7 +140,7 @@ class OrderItems(models.Model):
         return self.price * self.quantity
 
     def __str__(self):
-        return self.order_id
+        return str(self.order_id)
 
     class Meta:
         verbose_name = 'Item'
@@ -159,7 +159,7 @@ class UserInfo(models.Model):
     user_type = models.CharField(max_length=3, choices=USER_TYPE, verbose_name='Tipo de Usuario')
 
     def __str__(self):
-        return self.user
+        return str(self.user)
 
     class Meta:
         verbose_name = 'Usuario'
