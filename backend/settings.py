@@ -173,3 +173,7 @@ REST_FRAMEWORK = {
 }
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+with open(BASE_DIR+'/email.txt') as f:
+    db = f.read().strip().split('#')
+    EMAIL_URL = db[0]
+    EMAIL_KEY = db[1]
