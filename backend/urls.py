@@ -20,16 +20,15 @@ from app.views import ProductList, ProductDetail
 from app.views import AcountBalanceDetail
 from app.views import InvoiceList, InvoiceDetail
 from app.views import OrderList, OrderDetail
-from rest_auth.registration.views import VerifyEmailView
+from app.views import ConfirmEmail
+
+from allauth.account.views import AccountInactiveView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    # path('api-auth/', include('rest_framework.urls')),
     path('rest-auth/', include('rest_auth.urls')),
+    re_path(r"^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_',:&]+)/$", ConfirmEmail, name="account_confirm_email"),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
-    path('accounts/', include('allauth.urls')),
-    re_path(r'^account-confirm-email/', VerifyEmailView.as_view(), name='account_email_verification_sent'),
-    re_path(r'^account-confirm-email/(?P<key>[-:\w]+)/$', VerifyEmailView.as_view(), name='account_confirm_email'),
     path('api/customer/', CustomerList.as_view()),
     path('api/customer/<user_id>/', CustomerDetail.as_view()),
     path('api/product/', ProductList.as_view()),
@@ -39,4 +38,7 @@ urlpatterns = [
     path('api/invoice/<user_id>/<invoice_number>/', InvoiceDetail.as_view()),
     path('api/order/<user_id>/', OrderList.as_view()),
     path('api/order/<user_id>/<order_id>/', OrderDetail.as_view()),
+
+    # Signal put new user as inactive, and allauth needs this url for reverse redirection
+    path('inactive/$', AccountInactiveView.as_view(), name='account_inactive'),
 ]

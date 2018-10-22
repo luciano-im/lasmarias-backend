@@ -1,3 +1,9 @@
+import requests
+
+from django.conf import settings
+from django.contrib.sites.models import Site
+from django.contrib.sites.shortcuts import get_current_site
+from django.http import HttpResponse
 from django.shortcuts import render
 
 from rest_framework import generics
@@ -95,3 +101,16 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
         user_id = self.kwargs['user_id']
         order_id = self.kwargs['order_id']
         return Order.objects.filter(customer_id=user_id, order_id=order_id)
+
+
+def ConfirmEmail(request, key):
+    print("Confirmacion Email")
+    current_site = get_current_site(request)
+    domain = current_site.domain
+    r = requests.post('http://'+domain+'/rest-auth/registration/verify-email/', {'key':key})
+    if r.status_code == 200:
+        html = "<html><body><h1>¡ Su cuenta ha sido activada !</h1></body></html>"
+        return HttpResponse(html)
+    else:
+        html = "<html><body><h1>No hemos podido activar su cuenta, por favor intentelo nuevamente.</h1><p>Si continúa recibiendo este mensaje, por favor pongase en contacto con Las Marias para resolver el inconveniente a la menor brevedad posible.</p></body></html>"
+        return HttpResponse(html)
