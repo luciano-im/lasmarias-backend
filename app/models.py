@@ -143,7 +143,7 @@ class OrderItems(models.Model):
         return str(self.order_id)
 
     class Meta:
-        verbose_name = 'Item'
+        verbose_name = 'Item de Pedido'
         verbose_name_plural = 'Items de Pedidos'
 
 
@@ -159,7 +159,7 @@ class UserInfo(models.Model):
     user_type = models.CharField(max_length=3, choices=USER_TYPE, verbose_name='Tipo de Usuario')
 
     def __str__(self):
-        return str(self.user)
+        return str(self.user.email)
 
     class Meta:
         verbose_name = 'Usuario'

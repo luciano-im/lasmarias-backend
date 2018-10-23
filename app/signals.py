@@ -17,8 +17,12 @@ def preSave_User(sender, instance, **kwargs):
 
 @receiver(post_save, sender=User, dispatch_uid='app.signals.postSave_User')
 def postSave_User(sender, instance, created, **kwargs):
-    # If it's a new user and it's not staff member send an email to the administrator
+    # If it's a new user and it's not staff member
     if created == True and not instance.is_staff:
+        # Create UserInfo
+        profile = UserInfo(user=user)
+        profile.save()
+        # send an email to the administrator
         requests.post(
             settings.EMAIL_URL,
             auth=('api', settings.EMAIL_KEY),

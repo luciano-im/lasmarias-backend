@@ -66,6 +66,35 @@ class UserAdmin(BaseUserAdmin):
     get_user_type.short_description = 'Tipo de Usuario'
 
 
+class UserInfoAdmin(admin.ModelAdmin):
+	list_display = ('get_user_email', 'get_customer_id', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created')
+	fieldsets = (
+		(None, {
+			'fields': ('user',),
+		}),
+		(None, {
+			'fields': ('customer_id', 'user_type',),
+		})
+	)
+
+	def get_user_email(self, obj):
+		return obj.user.email
+
+	def get_customer_id(self, obj):
+		return obj.customer_id
+
+	def get_user_created(self, obj):
+		return obj.user.date_joined
+
+	def get_user_last_login(self, obj):
+		return obj.user.last_login
+
+	get_user_email.short_description = 'Usuario'
+	get_customer_id.short_description = 'Código de Cliente'
+	get_user_created.short_description = 'Fecha de Alta'
+	get_user_last_login.short_description = 'Último Ingreso'
+
+
 class CustomerAdmin(admin.ModelAdmin):
 	list_display = ('customer_id', 'first_name', 'last_name', 'zip_code', 'cuit', 'telephone', 'get_discount')
 
@@ -148,6 +177,7 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(User, UserAdmin)
+admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(AccountBalance, AccountBalanceAdmin)

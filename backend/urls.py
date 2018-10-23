@@ -40,5 +40,5 @@ urlpatterns = [
     path('api/order/<user_id>/<order_id>/', OrderDetail.as_view()),
 
     # Signal put new user as inactive, and allauth needs this url for reverse redirection
-    path('inactive/$', AccountInactiveView.as_view(), name='account_inactive'),
+    path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),
 ]
