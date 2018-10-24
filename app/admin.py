@@ -6,6 +6,8 @@ from django.contrib.auth.models import User
 from django.forms import ModelForm
 from django import forms
 
+from rest_framework.authtoken.models import Token
+
 from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
@@ -20,6 +22,7 @@ from app.models import OrderItems
 
 # Unregister models
 # admin.site.unregister(User)
+admin.site.unregister(Token)
 
 
 # class UserCreateForm(ModelForm):
@@ -97,16 +100,22 @@ class UserInfoAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-	list_display = ('customer_id', 'first_name', 'last_name', 'zip_code', 'cuit', 'telephone', 'get_discount')
+	list_display = ('customer_id', 'get_name', 'zip_code', 'cuit', 'telephone', 'get_discount')
+	list_filter = ('customer_id', 'first_name', 'zip_code')
 
 	def get_discount(self, obj):
 		return "%s %%" % obj.discount
 
+	def get_name(self, obj):
+		return obj.first_name + ' ' + obj.last_name
+
 	get_discount.short_description = 'Descuento'
+	get_name.short_description = 'Cliente'
 
 
 class ProductsAdmin(admin.ModelAdmin):
 	list_display = ('id', 'name', 'brand', 'product_line', 'unit', 'get_price')
+	list_filter = ('name', 'brand', 'product_line', 'unit')
 
 	def get_price(self, obj):
 		return "$ %s" % obj.price
@@ -165,7 +174,11 @@ class OrderItemsInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
 	inlines = (OrderItemsInline, )
-	list_display = ('order_id', 'user_id', 'get_customer_id', 'customer_id', 'date', 'status', 'payment', 'shipping', 'get_total_format')
+	list_display = ('order_id', 'get_customer_id', 'customer_id', 'date', 'status', 'payment', 'shipping', 'get_total_format', 'get_user_email')
+	list_filter = ('status', 'shipping', 'date', 'customer_id', 'payment')
+
+	def get_user_email(self, obj):
+		return obj.user_id.email
 
 	def get_customer_id(self, obj):
 		return obj.customer_id.customer_id
@@ -173,8 +186,19 @@ class OrderAdmin(admin.ModelAdmin):
 	def get_total_format(self, obj):
 		return "$ %s" % obj.get_total()
 
+	get_user_email.short_description = 'Usuario'
 	get_customer_id.short_description = 'Código de Cliente'
 	get_total_format.short_description = 'Total'
+
+
+class TokenAdmin(admin.ModelAdmin):
+	list_display = ('key', 'get_email', 'created')
+	list_filter = ('user__email',)
+
+	def get_email(self, obj):
+		return obj.user.email
+
+	get_email.short_description = 'Usuario'
 
 
 # admin.site.register(User, UserAdmin)
@@ -186,3 +210,4 @@ admin.site.register(Invoices, InvoiceAdmin)
 admin.site.register(OrderStatus, OrderStatusAdmin)
 admin.site.register(PaymentMethods, PaymentMethodsAdmin)
 admin.site.register(Order, OrderAdmin)
+admin.site.register(Token, TokenAdmin)
