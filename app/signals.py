@@ -20,7 +20,7 @@ def postSave_User(sender, instance, created, **kwargs):
     # If it's a new user and it's not staff member
     if created == True and not instance.is_staff:
         # Create UserInfo
-        profile = UserInfo(user=user)
+        profile = UserInfo.objects.create(user=instance)
         profile.save()
         # send an email to the administrator
         requests.post(
@@ -37,13 +37,32 @@ def postSave_User(sender, instance, created, **kwargs):
 
 @receiver(pre_save, sender=UserInfo, dispatch_uid='app.signals.preSave_UserInfo')
 def preSave_UserInfo(sender, instance, **kwargs):
-    email = EmailAddress.objects.get(email=instance.user.email)
-    email_confirmation = EmailConfirmation.create(email)
-    # Check if needs to send email
+    # Check if there is EmailAddress created, because this signal is fired after profile is created
+    # in User post_save
     try:
-        userinfo = UserInfo.objects.get(id=instance.pk)
-        if userinfo.customer_id_id is None and instance.customer_id_id is not None:
-            email_confirmation.send()
+        email = EmailAddress.objects.get(email=instance.user.email)
+        email_confirmation = EmailConfirmation.create(email)
+        # Check if needs to send email
+        try:
+            userinfo = UserInfo.objects.get(id=instance.pk)
+            if userinfo.customer_id_id is None and instance.customer_id_id is not None:
+                email_confirmation.send()
+        except ObjectDoesNotExist:
+            if instance.customer_id_id is not None:
+                email_confirmation.send()
     except ObjectDoesNotExist:
-        if instance.customer_id_id is not None:
-            email_confirmation.send()
+        pass
+
+
+@receiver(post_save, sender=UserInfo, dispatch_uid='app.signals.postSave_UserInfo')
+def postSave_UserInfo(sender, instance, created, **kwargs):
+    # If user type is administrator
+    if instance.user_type == 'ADM':
+        user = User.objects.get(email=instance.user.email)
+        user.is_staff = True
+        user.save()
+    else:
+        user = User.objects.get(email=instance.user.email)
+        if user.is_staff == True:
+            user.is_staff = False
+            user.save()

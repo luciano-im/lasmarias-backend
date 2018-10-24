@@ -19,69 +19,70 @@ from app.models import OrderItems
 
 
 # Unregister models
-admin.site.unregister(User)
+# admin.site.unregister(User)
 
 
-class UserCreateForm(ModelForm):
-	email = forms.EmailField(required=True, label='Direccion de email')
-
-	class Meta:
-		model = User
-		fields = ('email',)
-
-
-class UserInline(admin.StackedInline):
-	model = UserInfo
-	can_delete = False
-	verbose_name = 'Cliente Las Marias'
-	verbose_name_plural = 'Cliente Las Marias'
-
-
-class UserAdmin(BaseUserAdmin):
-    inlines = (UserInline, )
-    add_form = UserCreateForm
-
-    list_display = ('email', 'get_customer_id', 'get_customer', 'get_user_type',)
-    empty_value_display = ''
-
-    add_fieldsets = (
-        (None, {
-            'classes': ('wide',),
-            'fields': ('email',)
-            }
-        ),
-    )
-
-    def get_customer(self, obj):
-        return obj.userinfo.customer_id.first_name + ' ' + obj.userinfo.customer_id.last_name
-
-    def get_customer_id(self, obj):
-        return obj.userinfo.customer_id
-
-    def get_user_type(self, obj):
-        return obj.userinfo.user_type
-
-    get_customer.short_description = 'Cliente'
-    get_customer_id.short_description = 'Código de Cliente'
-    get_user_type.short_description = 'Tipo de Usuario'
+# class UserCreateForm(ModelForm):
+# 	email = forms.EmailField(required=True, label='Direccion de email')
+#
+# 	class Meta:
+# 		model = User
+# 		fields = ('email',)
+#
+#
+# class UserInline(admin.StackedInline):
+# 	model = UserInfo
+# 	can_delete = False
+# 	verbose_name = 'Cliente Las Marias'
+# 	verbose_name_plural = 'Cliente Las Marias'
+#
+#
+# class UserAdmin(BaseUserAdmin):
+#     inlines = (UserInline, )
+#     add_form = UserCreateForm
+#
+#     list_display = ('email', 'get_customer_id', 'get_customer', 'get_user_type',)
+#     empty_value_display = ''
+#
+#     add_fieldsets = (
+#         (None, {
+#             'classes': ('wide',),
+#             'fields': ('email',)
+#             }
+#         ),
+#     )
+#
+#     def get_customer(self, obj):
+#         return obj.userinfo.customer_id.first_name + ' ' + obj.userinfo.customer_id.last_name
+#
+#     def get_customer_id(self, obj):
+#         return obj.userinfo.customer_id
+#
+#     def get_user_type(self, obj):
+#         return obj.userinfo.user_type
+#
+#     get_customer.short_description = 'Cliente'
+#     get_customer_id.short_description = 'Código de Cliente'
+#     get_user_type.short_description = 'Tipo de Usuario'
 
 
 class UserInfoAdmin(admin.ModelAdmin):
 	list_display = ('get_user_email', 'get_customer_id', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created')
 	fieldsets = (
 		(None, {
-			'fields': ('user',),
+			'fields': ('email',),
 		}),
 		(None, {
 			'fields': ('customer_id', 'user_type',),
-		})
+		}),
 	)
+	readonly_fields=('email',)
 
 	def get_user_email(self, obj):
 		return obj.user.email
 
 	def get_customer_id(self, obj):
-		return obj.customer_id
+		return obj.customer_id.customer_id
 
 	def get_user_created(self, obj):
 		return obj.user.date_joined
@@ -176,7 +177,7 @@ class OrderAdmin(admin.ModelAdmin):
 	get_total_format.short_description = 'Total'
 
 
-admin.site.register(User, UserAdmin)
+# admin.site.register(User, UserAdmin)
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(Customer, CustomerAdmin)
 admin.site.register(Products, ProductsAdmin)

@@ -152,11 +152,17 @@ class UserInfo(models.Model):
         ('VEN', 'Vendedor'),
         ('CMA', 'Cliente Mayorista'),
         ('CMI', 'Cliente Minorista'),
+        ('ADM', 'Administrador')
     )
 
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
-    user_type = models.CharField(max_length=3, choices=USER_TYPE, verbose_name='Tipo de Usuario')
+    user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuario')
+    customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Cliente')
+    user_type = models.CharField(max_length=3, choices=USER_TYPE, blank=True, null=True, verbose_name='Tipo de Usuario')
+
+    def email(self):
+        return self.user.email
+
+    email.short_description = 'Usuario'
 
     def __str__(self):
         return str(self.user.email)
