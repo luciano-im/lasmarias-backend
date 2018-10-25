@@ -3,11 +3,18 @@ import requests
 from django.conf import settings
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 
 from rest_framework import generics
+from rest_framework import status
+from rest_framework.decorators import api_view
+from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
+
+from allauth.account.models import EmailConfirmation, EmailAddress
 
 from app.models import Customer
 from app.models import Products
@@ -20,6 +27,7 @@ from app.serializers import ProductSerializer
 from app.serializers import AccountBalanceSerializer
 from app.serializers import InvoiceSerializer
 from app.serializers import OrderSerializer
+from app.serializers import EmailConfirmationSerializer
 
 from app.permissions import SellerPermission
 from app.permissions import HasPermissionOrSeller
@@ -101,6 +109,27 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
         user_id = self.kwargs['user_id']
         order_id = self.kwargs['order_id']
         return Order.objects.filter(customer_id=user_id, order_id=order_id)
+
+
+@api_view(['POST'])
+def SendConfirmEmail(request):
+    if request.method == 'POST':
+        data = JSONParser().parse(request)
+        serializer = EmailConfirmationSerializer(data=data)
+        if serializer.is_valid():
+            data = serializer.data
+            try:
+                email = EmailAddress.objects.get(email=data['email'])
+                if email.verified == False:
+                    email_confirmation = EmailConfirmation.create(email)
+                    email_confirmation.send()
+                    return Response(serializer.data, status=status.HTTP_200_OK)
+                else:
+                    return Response({'error':'cuenta ya verificada'}, status=status.HTTP_406_NOT_ACCEPTABLE)
+            except ObjectDoesNotExist:
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 def ConfirmEmail(request, key):

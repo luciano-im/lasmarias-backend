@@ -81,3 +81,7 @@ class OrderSerializer(serializers.ModelSerializer):
             item.quantity = item_data.get('quantity', item.quantity)
             item.save()
         return instance
+
+
+class EmailConfirmationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
