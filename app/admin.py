@@ -7,6 +7,7 @@ from django.forms import ModelForm
 from django import forms
 
 from rest_framework.authtoken.models import Token
+from allauth.account.models import EmailAddress
 
 from app.models import UserInfo
 from app.models import Customer
@@ -23,6 +24,7 @@ from app.models import OrderItems
 # Unregister models
 # admin.site.unregister(User)
 admin.site.unregister(Token)
+admin.site.unregister(EmailAddress)
 
 
 # class UserCreateForm(ModelForm):
@@ -71,6 +73,7 @@ admin.site.unregister(Token)
 
 class UserInfoAdmin(admin.ModelAdmin):
 	list_display = ('get_user_email', 'get_customer_id', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created')
+	list_filter = ('user__email', 'customer_id__customer_id', 'customer_id', 'user_type')
 	fieldsets = (
 		(None, {
 			'fields': ('email',),
@@ -201,6 +204,24 @@ class TokenAdmin(admin.ModelAdmin):
 	get_email.short_description = 'Usuario'
 
 
+class EmailAddressForm(ModelForm):
+
+	class Meta:
+		model = EmailAddress
+		fields = ['email', 'verified']
+
+class EmailAddressAdmin(admin.ModelAdmin):
+	form = EmailAddressForm
+	list_display = ('email', 'verified')
+	list_filter = ('email', 'verified')
+	fieldsets = (
+		(None, {
+			'fields': ('email', 'verified'),
+		}),
+	)
+	readonly_fields=('email',)
+
+
 # admin.site.register(User, UserAdmin)
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(Customer, CustomerAdmin)
@@ -211,3 +232,4 @@ admin.site.register(OrderStatus, OrderStatusAdmin)
 admin.site.register(PaymentMethods, PaymentMethodsAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Token, TokenAdmin)
+admin.site.register(EmailAddress, EmailAddressAdmin)
