@@ -2,16 +2,16 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Customer(models.Model):
-    customer_id = models.CharField(primary_key=True, max_length=6, verbose_name='Código de Cliente')
-    cuit = models.CharField(max_length=11, verbose_name='CUIT')
-    first_name = models.CharField(max_length=80, verbose_name='Nombre')
-    last_name = models.CharField(max_length=80, verbose_name='Apellido')
+    customer_id = models.IntegerField(primary_key=True, verbose_name='Código de Cliente')
+    cuit = models.CharField(max_length=11, verbose_name='CUIT / DNI')
+    name = models.CharField(max_length=120, verbose_name='Nombre')
+    city = models.CharField(max_length=80, verbose_name='Localidad')
     zip_code = models.IntegerField(verbose_name='Código Postal')
     telephone = models.CharField(max_length=15, verbose_name='Teléfono')
-    discount = models.FloatField(verbose_name='Descuento', help_text='%')
+    email = models.CharField(max_length=50, verbose_name='Email')
 
     def __str__(self):
-        return str(self.first_name + ' ' + self.last_name)
+        return str(self.name)
 
     class Meta:
         verbose_name = 'Cliente'
@@ -25,7 +25,6 @@ class Products(models.Model):
     product_line = models.CharField(max_length=80, verbose_name='Rubro')
     unit = models.CharField(max_length=50, verbose_name='Unidad de Medida')
     price = models.FloatField(verbose_name='Precio')
-    # image = models.ImageField(verbose_name='Imágen del Producto')
 
     def __str__(self):
         return str(self.name)
