@@ -8,6 +8,7 @@ from django import forms
 
 from rest_framework.authtoken.models import Token
 from allauth.account.models import EmailAddress
+from import_export import resources
 
 from app.models import UserInfo
 from app.models import Customer
@@ -103,17 +104,13 @@ class UserInfoAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-	list_display = ('customer_id', 'get_name', 'zip_code', 'cuit', 'telephone', 'get_discount')
-	list_filter = ('customer_id', 'first_name', 'zip_code')
+	list_display = ('customer_id', 'name', 'address', 'city', 'zip_code', 'cuit', 'telephone', 'get_discount')
+	list_filter = ('customer_id', 'name', 'city')
 
 	def get_discount(self, obj):
 		return "%s %%" % obj.discount
 
-	def get_name(self, obj):
-		return obj.first_name + ' ' + obj.last_name
-
 	get_discount.short_description = 'Descuento'
-	get_name.short_description = 'Cliente'
 
 
 class ProductsAdmin(admin.ModelAdmin):
@@ -220,6 +217,16 @@ class EmailAddressAdmin(admin.ModelAdmin):
 		}),
 	)
 	readonly_fields=('email',)
+
+
+#Import-Export Resources
+class CustomerResource(resources.ModelResource):
+
+	class Meta:
+		model = Customer
+		import_id_fields = ('vendor_code',)
+		exclude = ('email', 'address')
+		dry_run = True
 
 
 # admin.site.register(User, UserAdmin)

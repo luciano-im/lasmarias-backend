@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'rest_auth',
     'rest_auth.registration',
 
+    'import_export',
     'app',
 ]
 
@@ -179,6 +180,10 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.TokenAuthentication',
     )
 }
+
+
+IMPORT_EXPORT_USE_TRANSACTIONS = True
+
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 with open(BASE_DIR+'/email.txt') as f:

@@ -5,6 +5,7 @@ class Customer(models.Model):
     customer_id = models.IntegerField(primary_key=True, verbose_name='Código de Cliente')
     cuit = models.CharField(max_length=11, verbose_name='CUIT / DNI')
     name = models.CharField(max_length=120, verbose_name='Nombre')
+    address = models.CharField(max_length=150, verbose_name='Dirección')
     city = models.CharField(max_length=80, verbose_name='Localidad')
     zip_code = models.IntegerField(verbose_name='Código Postal')
     telephone = models.CharField(max_length=15, verbose_name='Teléfono')
