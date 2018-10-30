@@ -170,3 +170,15 @@ class UserInfo(models.Model):
     class Meta:
         verbose_name = 'Usuario'
         verbose_name_plural = 'Usuarios'
+
+
+class CSVFilesData(models.Model):
+    file = models.CharField(max_length=15, verbose_name='Archivo')
+    modified_date = models.CharField(max_length=50, null=True, blank=True, verbose_name='Última modificación')
+
+    def __str__(self):
+        return str(self.file)
+
+    class Meta:
+        verbose_name = 'Archivos CSV'
+        verbose_name_plural = 'Archivos CSV'

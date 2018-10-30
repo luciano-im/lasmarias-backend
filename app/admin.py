@@ -20,6 +20,7 @@ from app.models import OrderStatus
 from app.models import PaymentMethods
 from app.models import Order
 from app.models import OrderItems
+from app.models import CSVFilesData
 
 
 # Unregister models
@@ -214,6 +215,10 @@ class EmailAddressAdmin(admin.ModelAdmin):
 	readonly_fields=('email',)
 
 
+class CSVFilesDataAdmin(admin.ModelAdmin):
+	list_display = ('file', 'modified_date')
+
+
 #Import-Export Resources
 class CustomerResource(resources.ModelResource):
 
@@ -243,3 +248,4 @@ admin.site.register(PaymentMethods, PaymentMethodsAdmin)
 admin.site.register(Order, OrderAdmin)
 admin.site.register(Token, TokenAdmin)
 admin.site.register(EmailAddress, EmailAddressAdmin)
+admin.site.register(CSVFilesData, CSVFilesDataAdmin)

@@ -22,6 +22,7 @@ from app.views import InvoiceList, InvoiceDetail
 from app.views import OrderList, OrderDetail
 from app.views import ConfirmEmail
 from app.views import SendConfirmEmail
+from app.views import importdata
 
 from allauth.account.views import AccountInactiveView
 
@@ -40,6 +41,8 @@ urlpatterns = [
     path('api/invoice/<user_id>/<invoice_number>/', InvoiceDetail.as_view()),
     path('api/order/<user_id>/', OrderList.as_view()),
     path('api/order/<user_id>/<order_id>/', OrderDetail.as_view()),
+
+    path('import/', importdata),
 
     # Signal put new user as inactive, and allauth needs this url for reverse redirection
     path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),

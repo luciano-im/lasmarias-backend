@@ -143,3 +143,11 @@ def ConfirmEmail(request, key):
     else:
         html = "<html><body><h1>No hemos podido activar su cuenta, por favor intentelo nuevamente.</h1><p>Si continúa recibiendo este mensaje, por favor pongase en contacto con Las Marias para resolver el inconveniente a la menor brevedad posible.</p></body></html>"
         return HttpResponse(html)
+
+
+from app import import_tasks
+
+def importdata(request):
+    import_tasks.importCustomer()
+    html = "<html><body><h1>Actualizacion</h1></body></html>"
+    return HttpResponse(html)
