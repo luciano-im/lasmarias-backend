@@ -104,13 +104,8 @@ class UserInfoAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-	list_display = ('customer_id', 'name', 'address', 'city', 'zip_code', 'cuit', 'telephone', 'get_discount')
+	list_display = ('customer_id', 'name', 'address', 'city', 'zip_code', 'cuit', 'telephone')
 	list_filter = ('customer_id', 'name', 'city')
-
-	def get_discount(self, obj):
-		return "%s %%" % obj.discount
-
-	get_discount.short_description = 'Descuento'
 
 
 class ProductsAdmin(admin.ModelAdmin):
@@ -224,9 +219,17 @@ class CustomerResource(resources.ModelResource):
 
 	class Meta:
 		model = Customer
-		import_id_fields = ('vendor_code',)
-		exclude = ('email', 'address')
-		dry_run = True
+		import_id_fields = ('customer_id',)
+		exclude = ('doc_type')
+		skip_unchanged = True
+
+
+class ProductsResource(resources.ModelResource):
+
+	class Meta:
+		model = Products
+		import_id_fields = ('id',)
+		skip_unchanged = True
 
 
 # admin.site.register(User, UserAdmin)

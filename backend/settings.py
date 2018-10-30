@@ -183,7 +183,7 @@ REST_FRAMEWORK = {
 
 
 IMPORT_EXPORT_USE_TRANSACTIONS = True
-
+FTP_IMPORT_DIR = os.path.join(BASE_DIR, 'ftp')
 
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 with open(BASE_DIR+'/email.txt') as f:

@@ -7,9 +7,9 @@ class Customer(models.Model):
     name = models.CharField(max_length=120, verbose_name='Nombre')
     address = models.CharField(max_length=150, verbose_name='Dirección')
     city = models.CharField(max_length=80, verbose_name='Localidad')
-    zip_code = models.IntegerField(verbose_name='Código Postal')
-    telephone = models.CharField(max_length=15, verbose_name='Teléfono')
-    email = models.CharField(max_length=50, verbose_name='Email')
+    zip_code = models.IntegerField(blank=True, null=True, verbose_name='Código Postal')
+    telephone = models.CharField(blank=True, null=True, max_length=15, verbose_name='Teléfono')
+    email = models.CharField(blank=True, null=True, max_length=50, verbose_name='Email')
 
     def __str__(self):
         return str(self.name)
