@@ -183,7 +183,7 @@ class OrderAdmin(admin.ModelAdmin):
 		return "$ %s" % obj.get_total()
 
 	get_user_email.short_description = 'Usuario'
-	get_customer_id.short_description = 'Código de Cliente'
+	get_customer_id.short_description = 'Nro Cliente'
 	get_total_format.short_description = 'Total'
 
 
@@ -235,6 +235,14 @@ class ProductsResource(resources.ModelResource):
 		model = Products
 		import_id_fields = ('id',)
 		skip_unchanged = True
+
+
+class OrderResource(resources.ModelResource):
+
+	class Meta:
+		model = OrderItems
+		fields = ('order_id', 'order_id__customer_id', 'order_id__date', 'order_id__payment', 'order_id__shipping', 'product_id', 'quantity', 'price')
+		export_order = ('order_id', 'order_id__customer_id', 'order_id__date', 'order_id__payment', 'order_id__shipping', 'product_id', 'quantity', 'price')
 
 
 # admin.site.register(User, UserAdmin)

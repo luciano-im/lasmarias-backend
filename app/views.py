@@ -21,6 +21,7 @@ from app.models import Products
 from app.models import AccountBalance
 from app.models import Invoices
 from app.models import Order
+from app.models import OrderItems
 
 from app.serializers import CustomerSerializer
 from app.serializers import ProductSerializer
@@ -32,6 +33,7 @@ from app.serializers import EmailConfirmationSerializer
 from app.permissions import SellerPermission
 from app.permissions import HasPermissionOrSeller
 
+from app.admin import OrderResource
 
 class CustomerList(generics.ListAPIView):
     queryset = Customer.objects.all()
@@ -143,3 +145,13 @@ def ConfirmEmail(request, key):
     else:
         html = "<html><body><h1>No hemos podido activar su cuenta, por favor intentelo nuevamente.</h1><p>Si continúa recibiendo este mensaje, por favor pongase en contacto con Las Marias para resolver el inconveniente a la menor brevedad posible.</p></body></html>"
         return HttpResponse(html)
+
+
+def ExportOrder(request, order_id):
+    order_resource = OrderResource()
+    queryset = OrderItems.objects.filter(order_id=order_id)
+    dataset = order_resource.export(queryset)
+    response = HttpResponse(dataset.csv, content_type='text/csv')
+    file_name = 'pedido-'+str(order_id)+'.csv'
+    response['Content-Disposition'] = "attachment; filename='%s'" % file_name
+    return response

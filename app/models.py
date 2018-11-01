@@ -110,14 +110,14 @@ class Order(models.Model):
         ('REL', 'Retiro en Local'),
     )
 
-    order_id = models.AutoField(primary_key=True, verbose_name='Código de Pedido')
+    order_id = models.AutoField(primary_key=True, verbose_name='Pedido')
     user_id = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Usuario')
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
     status = models.ForeignKey(OrderStatus, on_delete=models.CASCADE, verbose_name='Estado')
-    payment = models.ForeignKey(PaymentMethods, on_delete=models.CASCADE, verbose_name='Método de Pago')
+    payment = models.ForeignKey(PaymentMethods, on_delete=models.CASCADE, verbose_name='Forma de Pago')
     date = models.DateField(verbose_name='Fecha del Pedido')
     discount = models.FloatField(verbose_name='Descuento', help_text='%')
-    shipping = models.CharField(max_length=3, choices=SHIPPING_TYPE, verbose_name='Tipo de Envío')
+    shipping = models.CharField(max_length=3, choices=SHIPPING_TYPE, verbose_name='Entrega')
 
     def get_total(self):
         return sum(item.get_cost() for item in self.items.all())
