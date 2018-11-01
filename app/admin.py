@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
+from django.urls import reverse
+from django.utils.html import format_html
 
 from django.forms import ModelForm
 from django import forms
@@ -170,8 +172,13 @@ class OrderItemsInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
 	inlines = (OrderItemsInline, )
-	list_display = ('order_id', 'get_customer_id', 'customer_id', 'date', 'status', 'payment', 'shipping', 'get_total_format', 'get_user_email')
+	list_display = ('order_id', 'get_customer_id', 'customer_id', 'date', 'status', 'payment', 'shipping', 'get_total_format', 'get_user_email', 'download_link')
 	list_filter = ('status', 'shipping', 'date', 'customer_id', 'payment')
+	readonly_fields = ('download_link',)
+
+	def download_link(self, obj):
+		return format_html('<a href="{}" style="color:#35B78F;border-bottom:1px solid #35B78F;">Exportar</a>', reverse('export-order', args=[obj.order_id]))
+	download_link.short_description = "CSV"
 
 	def get_user_email(self, obj):
 		return obj.user_id.email

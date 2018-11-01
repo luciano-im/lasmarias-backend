@@ -1,6 +1,7 @@
 import requests
 
 from django.conf import settings
+from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
@@ -147,6 +148,7 @@ def ConfirmEmail(request, key):
         return HttpResponse(html)
 
 
+@staff_member_required
 def ExportOrder(request, order_id):
     order_resource = OrderResource()
     queryset = OrderItems.objects.filter(order_id=order_id)
