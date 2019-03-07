@@ -107,18 +107,22 @@ class UserInfoAdmin(admin.ModelAdmin):
 
 
 class CustomerAdmin(admin.ModelAdmin):
-	list_display = ('customer_id', 'name', 'address', 'city', 'zip_code', 'cuit', 'telephone')
+	list_display = ('customer_id', 'name', 'address', 'city', 'cuit', 'telephone', 'discount')
 	list_filter = ('customer_id', 'name', 'city')
 
 
 class ProductsAdmin(admin.ModelAdmin):
-	list_display = ('id', 'name', 'brand', 'product_line', 'unit', 'get_price')
+	list_display = ('id', 'name', 'brand', 'product_line', 'unit', 'package', 'offer', 'get_price', 'get_offer_price')
 	list_filter = ('name', 'brand', 'product_line', 'unit')
 
 	def get_price(self, obj):
 		return "$ %s" % obj.price
 
+	def get_offer_price(self, obj):
+		return "$ %s" % obj.offer_price
+
 	get_price.short_description = 'Precio'
+	get_offer_price.short_description = 'Precio Oferta'
 
 
 class InvoiceItemsInline(admin.TabularInline):
@@ -142,7 +146,7 @@ class InvoiceAdmin(admin.ModelAdmin):
 
 
 class AccountBalanceAdmin(admin.ModelAdmin):
-	list_display = ('get_customer_id', 'customer_id', 'get_balance')
+	list_display = ('get_customer_id', 'customer_id', 'voucher', 'date', 'get_balance')
 
 	def get_customer_id(self, obj):
 		return obj.customer_id.customer_id
@@ -241,6 +245,20 @@ class ProductsResource(resources.ModelResource):
 	class Meta:
 		model = Products
 		import_id_fields = ('id',)
+		skip_unchanged = True
+
+	def before_import_row(self, row, **kwargs):
+		if row['offer'] == 'N':
+			row['offer'] = False
+		elif row['offer'] == 'S':
+			row['offer'] = True
+
+
+class AccountBalanceResource(resources.ModelResource):
+
+	class Meta:
+		model = AccountBalance
+		import_id_fields = ('customer_id', 'date', 'voucher',)
 		skip_unchanged = True
 
 

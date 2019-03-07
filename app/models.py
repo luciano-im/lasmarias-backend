@@ -10,6 +10,7 @@ class Customer(models.Model):
     zip_code = models.IntegerField(blank=True, null=True, verbose_name='Código Postal')
     telephone = models.CharField(blank=True, null=True, max_length=15, verbose_name='Teléfono')
     email = models.CharField(blank=True, null=True, max_length=50, verbose_name='Email')
+    discount = models.FloatField(blank=True, null=True, verbose_name='Descuento')
 
     def __str__(self):
         return str(self.name)
@@ -26,6 +27,9 @@ class Products(models.Model):
     product_line = models.CharField(max_length=80, verbose_name='Rubro')
     unit = models.CharField(max_length=50, verbose_name='Unidad de Medida')
     price = models.FloatField(verbose_name='Precio')
+    offer = models.BooleanField(default=False, verbose_name='Oferta', help_text='El Producto esta en oferta?')
+    offer_price = models.FloatField(default=0, verbose_name='Precio Oferta')
+    package = models.CharField(blank=True, null=True, max_length=30, verbose_name='Envase')
 
     def __str__(self):
         return str(self.name)
@@ -70,7 +74,9 @@ class InvoiceItems(models.Model):
 
 class AccountBalance(models.Model):
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
-    balance = models.FloatField(verbose_name='Saldo Final')
+    date = models.DateField(verbose_name='Fecha del Comprobante')
+    voucher = models.CharField(max_length=30, verbose_name='Comprobante')
+    balance = models.FloatField(verbose_name='Saldo')
 
     def __str__(self):
         return str(self.customer_id)
@@ -78,6 +84,7 @@ class AccountBalance(models.Model):
     class Meta:
         verbose_name = 'Saldo de Cuenta Corriente'
         verbose_name_plural = 'Saldos de Cuenta Corriente'
+        unique_together = (('customer_id', 'date', 'voucher'),)
 
 
 class PaymentMethods(models.Model):
