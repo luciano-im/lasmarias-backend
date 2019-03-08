@@ -1,3 +1,5 @@
+import datetime
+
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
 from django.contrib.auth.models import Group
@@ -260,6 +262,10 @@ class AccountBalanceResource(resources.ModelResource):
 		model = AccountBalance
 		import_id_fields = ('customer_id', 'date', 'voucher',)
 		skip_unchanged = True
+	
+	def before_import_row(self, row, **kwargs):
+		row['date'] = datetime.datetime.strptime(row['date'], "%d/%m/%Y").strftime("%Y-%m-%d")
+		
 
 
 class OrderResource(resources.ModelResource):

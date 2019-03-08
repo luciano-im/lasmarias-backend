@@ -12,7 +12,7 @@ from app.models import Order
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
-        fields = ('customer_id', 'cuit', 'name', 'address', 'city', 'telephone')
+        fields = ('customer_id', 'cuit', 'name', 'address', 'city', 'telephone', 'discount')
 
 
 class ProductSerializer(serializers.ModelSerializer):

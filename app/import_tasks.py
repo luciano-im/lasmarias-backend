@@ -27,8 +27,6 @@ def importCustomer():
     # Update if modified date/time has changed
     if file_data.modified_date != str(last_modified_date):
         print('ACTUALIZO BASE DE CLIENTES')
-        file_data.modified_date = last_modified_date
-        file_data.save()
 
         f = open(customer_csv, 'r')
         dataset = tablib.import_set(f.read(), format='csv', delimiter=';', headers=False)
@@ -40,6 +38,8 @@ def importCustomer():
         # If result has no errors then import (create or update) the data
         if not result.has_errors():
             customer_resource.import_data(dataset, dry_run=False)
+            file_data.modified_date = last_modified_date
+            file_data.save()
     else:
         print('NO ACTUALIZO BASE DE CLIENTES')
 
@@ -59,8 +59,6 @@ def importProducts():
     # Update if modified date/time has changed
     if file_data.modified_date != str(last_modified_date):
         print('ACTUALIZO BASE DE PRODUCTOS')
-        file_data.modified_date = last_modified_date
-        file_data.save()
         
         f = open(products_csv, 'r')
         dataset = tablib.import_set(f.read(), format='csv', delimiter=';', headers=False)
@@ -72,6 +70,8 @@ def importProducts():
         # If result has no errors then import (create or update) the data
         if not result.has_errors():
             products_resource.import_data(dataset, dry_run=False)
+            file_data.modified_date = last_modified_date
+            file_data.save()
     else:
         print('NO ACTUALIZO BASE DE PRODUCTOS')
 
@@ -91,8 +91,6 @@ def importAccountBalance():
     # Update if modified date/time has changed
     if file_data.modified_date != str(last_modified_date):
         print('ACTUALIZO SALDOS DE CUENTA CORRIENTE')
-        file_data.modified_date = last_modified_date
-        file_data.save()
         
         f = open(account_csv, 'r')
         dataset = tablib.import_set(f.read(), format='csv', delimiter=';', headers=False)
@@ -104,5 +102,7 @@ def importAccountBalance():
         # If result has no errors then import (create or update) the data
         if not result.has_errors():
             account_resource.import_data(dataset, dry_run=False)
+            file_data.modified_date = last_modified_date
+            file_data.save()
     else:
         print('NO ACTUALIZO SALDOS DE CUENTA CORRIENTE')
