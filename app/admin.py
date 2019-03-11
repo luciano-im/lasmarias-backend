@@ -78,8 +78,9 @@ admin.site.unregister(EmailAddress)
 
 
 class UserInfoAdmin(admin.ModelAdmin):
-	list_display = ('get_user_email', 'get_customer_id', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created')
-	list_filter = ('user__email', 'customer_id__customer_id', 'customer_id', 'user_type')
+	list_display = ('get_user_email', 'get_customer_id', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created',)
+	list_filter = ('user__email', 'customer_id__customer_id', 'customer_id', 'user_type',)
+	readonly_fields=('email', 'related_name', 'related_last_name', 'related_customer_name', 'related_telephone', 'related_cel_phone', 'related_customer_address', 'related_city', 'related_zip_code',)
 	fieldsets = (
 		(None, {
 			'fields': ('email',),
@@ -87,8 +88,10 @@ class UserInfoAdmin(admin.ModelAdmin):
 		(None, {
 			'fields': ('customer_id', 'user_type',),
 		}),
+		(None, {
+			'fields': ('related_name', 'related_last_name', 'related_customer_name', 'related_telephone', 'related_cel_phone', 'related_customer_address', 'related_city', 'related_zip_code',)
+		})
 	)
-	readonly_fields=('email',)
 
 	def get_user_email(self, obj):
 		return obj.user.email

@@ -165,6 +165,14 @@ class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, verbose_name='Usuario')
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, blank=True, null=True, verbose_name='Cliente')
     user_type = models.CharField(max_length=3, choices=USER_TYPE, blank=True, null=True, verbose_name='Tipo de Usuario')
+    related_name = models.CharField(max_length=120, verbose_name='Nombre')
+    related_last_name = models.CharField(max_length=120, verbose_name='Apellido')
+    related_customer_name = models.CharField(max_length=150, verbose_name='Nombre del Comercio')
+    related_customer_address = models.CharField(max_length=150, verbose_name='Dirección del Comercio')
+    related_telephone = models.CharField(blank=True, null=True, max_length=15, verbose_name='Teléfono')
+    related_cel_phone = models.CharField(max_length=15, verbose_name='Celular')
+    related_city = models.CharField(max_length=80, verbose_name='Localidad')
+    related_zip_code = models.CharField(max_length=15, verbose_name='Código Postal')
 
     def email(self):
         return self.user.email
