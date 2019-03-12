@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
 from app.models import AccountBalance
@@ -7,6 +8,12 @@ from app.models import InvoiceItems
 from app.models import Invoices
 from app.models import OrderItems
 from app.models import Order
+
+
+class UserInfoSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserInfo
+        fields = ('related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code')
 
 
 class CustomerSerializer(serializers.ModelSerializer):

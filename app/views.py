@@ -17,6 +17,8 @@ from rest_framework.response import Response
 
 from allauth.account.models import EmailConfirmation, EmailAddress
 
+from django.contrib.auth.models import User
+from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
 from app.models import AccountBalance
@@ -24,6 +26,7 @@ from app.models import Invoices
 from app.models import Order
 from app.models import OrderItems
 
+from app.serializers import UserInfoSerializer
 from app.serializers import CustomerSerializer
 from app.serializers import ProductSerializer
 from app.serializers import AccountBalanceSerializer
@@ -112,6 +115,33 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
         user_id = self.kwargs['user_id']
         order_id = self.kwargs['order_id']
         return Order.objects.filter(customer_id=user_id, order_id=order_id)
+
+
+@api_view(['POST'])
+def SaveUserInfo(request):
+    if request.method == 'POST':
+        # data = JSONParser().parse(request)
+        data = request.data
+        email = data['email']
+        serializer = UserInfoSerializer(data=data)
+        if serializer.is_valid():
+            data = serializer.data
+            user = User.objects.get(email=email)
+            profile = UserInfo.objects.get(user_id=user.pk)
+            
+            profile.related_name = data['related_name']
+            profile.related_last_name = data['related_last_name']
+            profile.related_customer_name = data['related_customer_name']
+            profile.related_customer_address = data['related_customer_address']
+            profile.related_telephone = data['related_telephone']
+            profile.related_cel_phone = data['related_cel_phone']
+            profile.related_city = data['related_city']
+            profile.related_zip_code = data['related_zip_code']
+            profile.save()
+
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])

@@ -15,6 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, re_path, include
+from app.views import SaveUserInfo
 from app.views import CustomerList, CustomerDetail
 from app.views import ProductList, ProductDetail
 from app.views import AcountBalanceDetail
@@ -32,6 +33,7 @@ urlpatterns = [
     re_path(r"^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_',:&]+)/$", ConfirmEmail, name="account_confirm_email"),
     path('rest-auth/registration/send-account-confirm-email/', SendConfirmEmail, name="send_account_confirm_email"),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
+    path('api/user/related-info/', SaveUserInfo, name="save_user_info"),
     path('api/customer/', CustomerList.as_view()),
     path('api/customer/<user_id>/', CustomerDetail.as_view()),
     path('api/product/', ProductList.as_view()),
