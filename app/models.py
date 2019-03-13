@@ -1,5 +1,9 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.utils.safestring import mark_safe
+
+from django_resized import ResizedImageField
+
 
 class Customer(models.Model):
     customer_id = models.IntegerField(primary_key=True, verbose_name='Código de Cliente')
@@ -38,6 +42,22 @@ class Products(models.Model):
         verbose_name = 'Producto'
         verbose_name_plural = 'Productos'
 
+
+def product_image_path(instance, filename):
+    return 'products/{0}/{1}'.format(instance.product_id.id, filename)
+
+class ProductImages(models.Model):
+    product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Producto')
+    image = ResizedImageField(upload_to='images/', max_length=200, size=[200, 200], blank=True, null=True, verbose_name='Imágen')
+
+    # def image_tag(self):
+    #     return mark_safe('<img src="images/%s" width="150" height="150" />' % (self.image))
+
+    # image_tag.short_description = 'Imágen'
+
+    class Meta:
+        verbose_name = 'Imágen'
+        verbose_name_plural = 'Imágenes'
 
 class Invoices(models.Model):
     number = models.IntegerField(unique=True, verbose_name='Número de Factura')

@@ -16,6 +16,7 @@ from import_export import resources
 
 from app.models import UserInfo
 from app.models import Customer
+from app.models import ProductImages
 from app.models import Products
 from app.models import AccountBalance
 from app.models import Invoices
@@ -120,7 +121,14 @@ class CustomerAdmin(admin.ModelAdmin):
 	list_filter = ('customer_id', 'name', 'city')
 
 
+class ProductImagesInline(admin.TabularInline):
+	model = ProductImages
+	extra = 1
+	verbose_name = 'Imágen del Producto'
+	verbose_name_plural = 'Imágenes del Producto'
+
 class ProductsAdmin(admin.ModelAdmin):
+	inlines = (ProductImagesInline, )
 	list_display = ('id', 'name', 'brand', 'product_line', 'unit', 'package', 'offer', 'get_price', 'get_offer_price')
 	list_filter = ('name', 'brand', 'product_line', 'unit')
 
@@ -286,6 +294,7 @@ class OrderResource(resources.ModelResource):
 # admin.site.register(User, UserAdmin)
 admin.site.register(UserInfo, UserInfoAdmin)
 admin.site.register(Customer, CustomerAdmin)
+# admin.site.register(ProductImages)
 admin.site.register(Products, ProductsAdmin)
 admin.site.register(AccountBalance, AccountBalanceAdmin)
 admin.site.register(Invoices, InvoiceAdmin)

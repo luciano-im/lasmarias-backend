@@ -6,6 +6,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from app.models import UserInfo
 from allauth.account.models import EmailConfirmation, EmailAddress
+from allauth.account.signals import email_confirmed
 
 
 @receiver(pre_save, sender=User, dispatch_uid='app.signals.preSave_User')
@@ -66,3 +67,12 @@ def postSave_UserInfo(sender, instance, created, **kwargs):
         if user.is_staff == True:
             user.is_staff = False
             user.save()
+
+@receiver(email_confirmed, dispatch_uid='app.signals.postSave_UserInfo')
+def post_EmailConfirmed(request, email_address, **kwargs):
+    try:   
+        user = User.objects.get(email=email_address.email)
+        user.is_active = True
+        user.save()
+    except ObjectDoesNotExist:
+        pass
