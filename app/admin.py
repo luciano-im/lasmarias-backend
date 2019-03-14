@@ -2,13 +2,17 @@ import datetime
 
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as BaseUserAdmin
+from django.contrib.admin.widgets import AdminFileWidget
 from django.contrib.auth.models import Group
 from django.contrib.auth.models import User
 from django.urls import reverse
 from django.utils.html import format_html
+from django.utils.safestring import mark_safe
+from django.utils.translation import ugettext_lazy as _
 
 from django.forms import ModelForm
 from django import forms
+from django.db import models
 
 from rest_framework.authtoken.models import Token
 from allauth.account.models import EmailAddress
@@ -121,15 +125,27 @@ class CustomerAdmin(admin.ModelAdmin):
 	list_filter = ('customer_id', 'name', 'city')
 
 
+class ProductImagesWidget(AdminFileWidget):
+	def render(self, name, value, attrs=None, renderer=None):
+		output = []
+		if value and getattr(value, "url", None):
+			image_url = value.url
+			file_name=str(value)
+			output.append(u' <a href="%s" target="_blank"><img src="%s" alt="%s" style="margin: 5px 0 25px 0; float: right;" /></a> %s ' % (image_url, image_url, file_name, _('')))
+		output.append(super(AdminFileWidget, self).render(name, value, attrs))
+		return mark_safe(u''.join(output))
+
 class ProductImagesInline(admin.TabularInline):
 	model = ProductImages
-	extra = 1
+	# form = ProductImagesForm
+	formfield_overrides = {models.ImageField: {'widget': ProductImagesWidget}}
+	extra = 0
 	verbose_name = 'Imágen del Producto'
 	verbose_name_plural = 'Imágenes del Producto'
 
 class ProductsAdmin(admin.ModelAdmin):
 	inlines = (ProductImagesInline, )
-	list_display = ('id', 'name', 'brand', 'product_line', 'unit', 'package', 'offer', 'get_price', 'get_offer_price')
+	list_display = ('product_id', 'name', 'brand', 'product_line', 'unit', 'package', 'offer', 'get_price', 'get_offer_price')
 	list_filter = ('name', 'brand', 'product_line', 'unit')
 
 	def get_price(self, obj):
@@ -261,7 +277,7 @@ class ProductsResource(resources.ModelResource):
 
 	class Meta:
 		model = Products
-		import_id_fields = ('id',)
+		import_id_fields = ('product_id',)
 		skip_unchanged = True
 
 	def before_import_row(self, row, **kwargs):

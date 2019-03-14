@@ -25,7 +25,7 @@ class Customer(models.Model):
 
 
 class Products(models.Model):
-    id = models.CharField(primary_key=True, max_length=20, verbose_name='Código de Producto')
+    product_id = models.CharField(unique=True, max_length=20, verbose_name='Código de Producto')
     name = models.CharField(max_length=80, verbose_name='Nombre')
     brand = models.CharField(max_length=80, verbose_name='Marca')
     product_line = models.CharField(max_length=80, verbose_name='Rubro')
@@ -48,12 +48,10 @@ def product_image_path(instance, filename):
 
 class ProductImages(models.Model):
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Producto')
-    image = ResizedImageField(upload_to='images/', max_length=200, size=[200, 200], blank=True, null=True, verbose_name='Imágen')
+    image = ResizedImageField(upload_to=product_image_path, max_length=200, size=[200, 200], blank=True, null=True, verbose_name='Imágen')
 
-    # def image_tag(self):
-    #     return mark_safe('<img src="images/%s" width="150" height="150" />' % (self.image))
-
-    # image_tag.short_description = 'Imágen'
+    def __str__(self):
+        return str('')
 
     class Meta:
         verbose_name = 'Imágen'

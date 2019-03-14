@@ -62,7 +62,7 @@ def importProducts():
         
         f = open(products_csv, 'r')
         dataset = tablib.import_set(f.read(), format='csv', delimiter=';', headers=False)
-        dataset.headers = ('id','name','brand','product_line','unit','price','offer','offer_price','package')
+        dataset.headers = ('product_id','name','brand','product_line','unit','price','offer','offer_price','package')
 
         products_resource = ProductsResource()
         # Test import

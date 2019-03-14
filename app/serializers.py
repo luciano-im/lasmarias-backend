@@ -25,7 +25,7 @@ class CustomerSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
-        fields = ('id', 'name', 'brand', 'product_line', 'unit', 'price')
+        fields = ('product_id', 'name', 'brand', 'product_line', 'unit', 'price')
 
 
 class AccountBalanceSerializer(serializers.ModelSerializer):
