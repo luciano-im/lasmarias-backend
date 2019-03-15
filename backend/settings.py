@@ -174,7 +174,12 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = False
 ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 30
 # ACCOUNT_SESSION_REMEMBER
 
+#Django-Rest-Auth
+REST_AUTH_REGISTER_SERIALIZERS = {
+    'REGISTER_SERIALIZER': 'app.serializers.ProfileRegisterSerializer'
+}
 
+#Django-Rest-Framework
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework.authentication.TokenAuthentication',

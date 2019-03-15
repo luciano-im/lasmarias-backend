@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from rest_auth.registration.serializers import RegisterSerializer
 
 from app.models import UserInfo
 from app.models import Customer
@@ -8,6 +9,30 @@ from app.models import InvoiceItems
 from app.models import Invoices
 from app.models import OrderItems
 from app.models import Order
+
+
+class ProfileRegisterSerializer(RegisterSerializer):
+    related_name = serializers.CharField(max_length=120, source="userinfo.related_name")
+    related_last_name = serializers.CharField(max_length=120, source="userinfo.related_last_name")
+    related_customer_name = serializers.CharField(max_length=150, source="userinfo.related_customer_name")
+    related_customer_address = serializers.CharField(max_length=150, source="userinfo.related_customer_address")
+    related_telephone = serializers.CharField(required=False, default='', max_length=15, source="userinfo.related_telephone")
+    related_cel_phone = serializers.CharField(max_length=15, source="userinfo.related_cel_phone")
+    related_city = serializers.CharField(max_length=80, source="userinfo.related_city")
+    related_zip_code = serializers.CharField(max_length=15, source="userinfo.related_zip_code")
+
+    def custom_signup(self, request, user):
+        profile_data = self.validated_data['userinfo']
+        profile = UserInfo.objects.create(user=user)
+        profile.related_name = profile_data['related_name']
+        profile.related_last_name = profile_data['related_last_name']
+        profile.related_customer_name = profile_data['related_customer_name']
+        profile.related_customer_address = profile_data['related_customer_address']
+        profile.related_telephone = profile_data['related_telephone']
+        profile.related_cel_phone = profile_data['related_cel_phone']
+        profile.related_city = profile_data['related_city']
+        profile.related_zip_code = profile_data['related_zip_code']
+        profile.save()
 
 
 class UserInfoSerializer(serializers.ModelSerializer):

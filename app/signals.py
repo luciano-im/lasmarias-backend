@@ -20,9 +20,6 @@ def preSave_User(sender, instance, **kwargs):
 def postSave_User(sender, instance, created, **kwargs):
     # If it's a new user and it's not staff member
     if created == True and not instance.is_staff:
-        # Create UserInfo
-        profile = UserInfo.objects.create(user=instance)
-        profile.save()
         # send an email to the administrator
         requests.post(
             settings.EMAIL_URL,
