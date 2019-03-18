@@ -29,6 +29,8 @@ from app.views import ConfirmEmail
 from app.views import SendConfirmEmail
 from app.views import ExportOrder
 
+from app.views import PublishMessage
+
 from allauth.account.views import AccountInactiveView
 
 urlpatterns = [
@@ -48,6 +50,8 @@ urlpatterns = [
     path('api/invoice/<user_id>/<invoice_number>/', InvoiceDetail.as_view()),
     path('api/order/<user_id>/', OrderList.as_view()),
     path('api/order/<user_id>/<order_id>/', OrderDetail.as_view()),
+    
+    path('publish/', PublishMessage),
 
     path('export-order/<order_id>/', ExportOrder, name='export-order'),
 

@@ -8,6 +8,9 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
 
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.pubnub import PubNub
+
 from rest_framework import generics
 from rest_framework import status
 from rest_framework.decorators import api_view
@@ -187,3 +190,23 @@ def ExportOrder(request, order_id):
     file_name = 'pedido-'+str(order_id)+'.csv'
     response['Content-Disposition'] = "attachment; filename='%s'" % file_name
     return response
+
+
+def PublishMessage(request):
+    pnconfig = PNConfiguration()
+    pnconfig.subscribe_key = ''
+    pnconfig.publish_key = ''
+    pnconfig.ssl = False
+    
+    pubnub = PubNub(pnconfig)
+
+    def publish_callback(result, status):
+        print(result)
+        print(status)
+        # Handle PNPublishResult and PNStatus
+ 
+    pubnub.publish().channel('lasmarias').message(['Este es mi mensaje']).pn_async(publish_callback)
+    
+    
+    html = "<html><body><h1>Mensaje enviado.</h1></body></html>"
+    return HttpResponse(html)
