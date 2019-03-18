@@ -50,10 +50,11 @@ urlpatterns = [
     path('api/invoice/<user_id>/<invoice_number>/', InvoiceDetail.as_view()),
     path('api/order/<user_id>/', OrderList.as_view()),
     path('api/order/<user_id>/<order_id>/', OrderDetail.as_view()),
-    
-    path('publish/', PublishMessage),
 
     path('export-order/<order_id>/', ExportOrder, name='export-order'),
+
+    # PubNub publish test URL
+    path('publish/', PublishMessage),
 
     # Signal put new user as inactive, and allauth needs this url for reverse redirection
     path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),

@@ -195,3 +195,10 @@ with open(BASE_DIR+'/email.txt') as f:
     db = f.read().strip().split('#')
     EMAIL_URL = db[0]
     EMAIL_KEY = db[1]
+
+
+# PubNub Configuration
+with open(BASE_DIR+'/pubnub.txt') as f:
+    db = f.read().strip().split('#')
+    PUBNUB_PUBLISH_KEY = db[0]
+    PUBNUB_SUBSCRIBE_KEY = db[1]

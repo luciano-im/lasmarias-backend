@@ -3,13 +3,38 @@
 import os
 from datetime import datetime
 import tablib
+
 from django.conf import settings
+from django.db.models import Q
+
+from pubnub.pnconfiguration import PNConfiguration
+from pubnub.pubnub import PubNub
+from pubnub.exceptions import PubNubException
 
 from app.admin import CustomerResource
 from app.admin import ProductsResource
 from app.admin import AccountBalanceResource
 
 from app.models import CSVFilesData
+
+
+def PublishUpdate():
+    pnconfig = PNConfiguration()
+    pnconfig.publish_key = settings.PUBNUB_PUBLISH_KEY
+    pnconfig.subscribe_key = settings.PUBNUB_SUBSCRIBE_KEY
+    pnconfig.ssl = False
+    pubnub = PubNub(pnconfig)
+
+    def publish_callback(result, status):
+        print(result)
+        print(status)
+        # Handle PNPublishResult and PNStatus
+ 
+    try:
+        publish_data = list(CSVFilesData.objects.filter(Q(file='Productos') | Q(file='Clientes')).values('file', 'modified_date'))
+        pubnub.publish().channel('lasmarias').message(publish_data).pn_async(publish_callback)
+    except PubNubException as e:
+        print(e)
 
 
 def importCustomer():
@@ -40,6 +65,9 @@ def importCustomer():
             customer_resource.import_data(dataset, dry_run=False)
             file_data.modified_date = last_modified_date
             file_data.save()
+
+            PublishUpdate()
+
     else:
         print('NO ACTUALIZO BASE DE CLIENTES')
 
@@ -72,6 +100,8 @@ def importProducts():
             products_resource.import_data(dataset, dry_run=False)
             file_data.modified_date = last_modified_date
             file_data.save()
+
+            PublishUpdate()
     else:
         print('NO ACTUALIZO BASE DE PRODUCTOS')
 

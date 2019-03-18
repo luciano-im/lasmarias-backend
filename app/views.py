@@ -192,10 +192,11 @@ def ExportOrder(request, order_id):
     return response
 
 
+# PubNub pusblish message test view
 def PublishMessage(request):
     pnconfig = PNConfiguration()
-    pnconfig.subscribe_key = ''
-    pnconfig.publish_key = ''
+    pnconfig.publish_key = settings.PUBNUB_PUBLISH_KEY
+    pnconfig.subscribe_key = settings.PUBNUB_SUBSCRIBE_KEY
     pnconfig.ssl = False
     
     pubnub = PubNub(pnconfig)
@@ -205,7 +206,7 @@ def PublishMessage(request):
         print(status)
         # Handle PNPublishResult and PNStatus
  
-    pubnub.publish().channel('lasmarias').message(['Este es mi mensaje']).pn_async(publish_callback)
+    pubnub.publish().channel('lasmarias').message(['Test message']).pn_async(publish_callback)
     
     
     html = "<html><body><h1>Mensaje enviado.</h1></body></html>"

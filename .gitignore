@@ -4,5 +4,6 @@ ftp/
 secret_key.txt
 database.txt
 email.txt
+pubnub.txt
 *.pyc
 mediafiles/
