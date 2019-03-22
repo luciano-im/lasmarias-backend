@@ -7,6 +7,7 @@ from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
 from django.shortcuts import render
+from django.db.models import Q
 
 from pubnub.pnconfiguration import PNConfiguration
 from pubnub.pubnub import PubNub
@@ -28,6 +29,7 @@ from app.models import AccountBalance
 from app.models import Invoices
 from app.models import Order
 from app.models import OrderItems
+from app.models import CSVFilesData
 
 from app.serializers import UserInfoSerializer
 from app.serializers import CustomerSerializer
@@ -206,7 +208,11 @@ def PublishMessage(request):
         print(status)
         # Handle PNPublishResult and PNStatus
  
-    pubnub.publish().channel('lasmarias').message(['Test message']).pn_async(publish_callback)
+    try:
+        publish_data = list(CSVFilesData.objects.filter(Q(file='Productos') | Q(file='Clientes')).values('file', 'modified_date'))
+        pubnub.publish().channel('lasmarias').message(publish_data).pn_async(publish_callback)
+    except PubNubException as e:
+        print(e)
     
     
     html = "<html><body><h1>Mensaje enviado.</h1></body></html>"

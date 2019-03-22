@@ -47,7 +47,8 @@ def product_image_path(instance, filename):
     return 'products/{0}/{1}'.format(instance.product_id.id, filename)
 
 class ProductImages(models.Model):
-    product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Producto')
+    # Set related_name to use backward relationships on ProductSerializer
+    product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Producto', related_name='images')
     image = ResizedImageField(upload_to=product_image_path, max_length=200, size=[200, 200], blank=True, null=True, verbose_name='Imágen')
 
     def __str__(self):

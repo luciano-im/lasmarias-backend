@@ -4,6 +4,7 @@ from rest_auth.registration.serializers import RegisterSerializer
 from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
+from app.models import ProductImages
 from app.models import AccountBalance
 from app.models import InvoiceItems
 from app.models import Invoices
@@ -47,10 +48,18 @@ class CustomerSerializer(serializers.ModelSerializer):
         fields = ('customer_id', 'cuit', 'name', 'address', 'city', 'telephone', 'discount')
 
 
+class ProductImagesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ProductImages
+        fields = ('image',)
+
+
 class ProductSerializer(serializers.ModelSerializer):
+    images = ProductImagesSerializer(many=True)
+
     class Meta:
         model = Products
-        fields = ('product_id', 'name', 'brand', 'product_line', 'unit', 'price')
+        fields = ('product_id', 'name', 'brand', 'product_line', 'unit', 'price', 'offer', 'offer_price', 'package', 'images',)
 
 
 class AccountBalanceSerializer(serializers.ModelSerializer):
