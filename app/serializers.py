@@ -65,7 +65,7 @@ class ProductSerializer(serializers.ModelSerializer):
 class AccountBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountBalance
-        fields = ('customer_id', 'balance')
+        fields = ('voucher', 'date', 'balance')
 
 
 class InvoiceItemsSerializer(serializers.ModelSerializer):

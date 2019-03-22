@@ -80,7 +80,7 @@ class AcountBalanceDetail(generics.ListAPIView):
 
     def get_queryset(self):
         user_id = self.kwargs['user_id']
-        return AccountBalance.objects.filter(customer_id=user_id)
+        return AccountBalance.objects.filter(customer_id=user_id).order_by('date', 'voucher')
 
 
 class InvoiceList(generics.ListAPIView):
