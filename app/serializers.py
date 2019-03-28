@@ -49,9 +49,15 @@ class CustomerSerializer(serializers.ModelSerializer):
 
 
 class ProductImagesSerializer(serializers.ModelSerializer):
+    image_relative_url = serializers.SerializerMethodField()
+
     class Meta:
         model = ProductImages
-        fields = ('image',)
+        fields = ('image_relative_url',)
+    
+    # Get relative path
+    def get_image_relative_url(self, obj):
+        return obj.image.url
 
 
 class ProductSerializer(serializers.ModelSerializer):
