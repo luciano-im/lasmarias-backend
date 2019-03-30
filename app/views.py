@@ -19,6 +19,8 @@ from rest_framework.parsers import JSONParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
+from rest_auth.views import LoginView
+
 from allauth.account.models import EmailConfirmation, EmailAddress
 
 from django.contrib.auth.models import User
@@ -122,31 +124,40 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
         return Order.objects.filter(customer_id=user_id, order_id=order_id)
 
 
-@api_view(['POST'])
-def SaveUserInfo(request):
-    if request.method == 'POST':
-        # data = JSONParser().parse(request)
-        data = request.data
-        email = data['email']
-        serializer = UserInfoSerializer(data=data)
-        if serializer.is_valid():
-            data = serializer.data
-            user = User.objects.get(email=email)
-            profile = UserInfo.objects.get(user_id=user.pk)
-            
-            profile.related_name = data['related_name']
-            profile.related_last_name = data['related_last_name']
-            profile.related_customer_name = data['related_customer_name']
-            profile.related_customer_address = data['related_customer_address']
-            profile.related_telephone = data['related_telephone']
-            profile.related_cel_phone = data['related_cel_phone']
-            profile.related_city = data['related_city']
-            profile.related_zip_code = data['related_zip_code']
-            profile.save()
+class CustomLoginView(LoginView):
+    def get_response(self):
+        original_response = super().get_response()
+        user_type = self.user.userinfo.user_type
+        my_data = {'user_type': user_type}
+        original_response.data.update(my_data)
+        return original_response
 
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# @api_view(['POST'])
+# def SaveUserInfo(request):
+#     if request.method == 'POST':
+#         # data = JSONParser().parse(request)
+#         data = request.data
+#         email = data['email']
+#         serializer = UserInfoSerializer(data=data)
+#         if serializer.is_valid():
+#             data = serializer.data
+#             user = User.objects.get(email=email)
+#             profile = UserInfo.objects.get(user_id=user.pk)
+            
+#             profile.related_name = data['related_name']
+#             profile.related_last_name = data['related_last_name']
+#             profile.related_customer_name = data['related_customer_name']
+#             profile.related_customer_address = data['related_customer_address']
+#             profile.related_telephone = data['related_telephone']
+#             profile.related_cel_phone = data['related_cel_phone']
+#             profile.related_city = data['related_city']
+#             profile.related_zip_code = data['related_zip_code']
+#             profile.save()
+
+#             return Response(serializer.data, status=status.HTTP_200_OK)
+#         else:
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
