@@ -57,8 +57,8 @@ class CustomerDetail(generics.ListAPIView):
     permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return Customer.objects.filter(customer_id=user_id)
+        customer_id = self.kwargs['customer_id']
+        return Customer.objects.filter(customer_id=customer_id)
 
 
 class ProductList(generics.ListAPIView):
@@ -81,8 +81,8 @@ class AcountBalanceDetail(generics.ListAPIView):
     permission_classes = (IsAuthenticated, SellerPermission,)
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return AccountBalance.objects.filter(customer_id=user_id).order_by('date', 'voucher')
+        customer_id = self.kwargs['customer_id']
+        return AccountBalance.objects.filter(customer_id=customer_id).order_by('date', 'voucher')
 
 
 class InvoiceList(generics.ListAPIView):
@@ -90,8 +90,8 @@ class InvoiceList(generics.ListAPIView):
     permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return Invoices.objects.filter(customer_id=user_id)
+        customer_id = self.kwargs['customer_id']
+        return Invoices.objects.filter(customer_id=customer_id)
 
 
 class InvoiceDetail(generics.ListAPIView):
@@ -99,9 +99,9 @@ class InvoiceDetail(generics.ListAPIView):
     permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
+        customer_id = self.kwargs['customer_id']
         invoice_number = self.kwargs['invoice_number']
-        return Invoices.objects.filter(customer_id=user_id, number=invoice_number)
+        return Invoices.objects.filter(customer_id=customer_id, number=invoice_number)
 
 
 class OrderList(generics.ListCreateAPIView):
@@ -109,8 +109,8 @@ class OrderList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
-        return Order.objects.filter(customer_id=user_id)
+        customer_id = self.kwargs['customer_id']
+        return Order.objects.filter(customer_id=customer_id)
 
 
 class OrderDetail(generics.RetrieveUpdateAPIView):
@@ -119,9 +119,9 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
     lookup_field = 'order_id'
 
     def get_queryset(self):
-        user_id = self.kwargs['user_id']
+        customer_id = self.kwargs['customer_id']
         order_id = self.kwargs['order_id']
-        return Order.objects.filter(customer_id=user_id, order_id=order_id)
+        return Order.objects.filter(customer_id=customer_id, order_id=order_id)
 
 
 class CustomLoginView(LoginView):
