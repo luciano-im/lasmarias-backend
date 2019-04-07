@@ -106,11 +106,16 @@ class InvoiceDetail(generics.ListAPIView):
 
 class OrderList(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
-    permission_classes = (IsAuthenticated, HasPermissionOrSeller)
+    #permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
         customer_id = self.kwargs['customer_id']
         return Order.objects.filter(customer_id=customer_id)
+
+    def perform_create(self, serializer):
+        # Get current user
+        req = serializer.context['request']
+        serializer.save(user_id=req.user)
 
 
 class OrderDetail(generics.RetrieveUpdateAPIView):
