@@ -100,7 +100,7 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = ('order_id', 'user_id', 'customer_id', 'status', 'payment', 'date', 'discount', 'shipping', 'items')
-        read_only_fields = ('user_id', )
+        read_only_fields = ('user_id', 'customer_id')
     
     def create(self, validated_data):
         items = validated_data.pop('items')

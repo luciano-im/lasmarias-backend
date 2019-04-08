@@ -8,25 +8,15 @@ class SellerPermission(permissions.BasePermission):
 
 class HasPermissionOrSeller(permissions.BasePermission):
     def has_permission(self, request, view):
-        user_id = view.kwargs['user_id']
-        customer_id = request.user.userinfo.customer_id_id
+        # If seller return True
         is_seller = request.user.userinfo.user_type
-        # If request is Create or Update check that received customer_id
-        # matches with the URL's customer_id
-        # If the previous condition it's ok then check that URL's customer_id
-        # matches with the customer_id of logged user, or user type is a seller
-        if request.method == 'POST' or request.method == 'PUT':
-            if request.data['customer_id'] == user_id:
-                if user_id == customer_id or is_seller == 'VEN':
-                    return True
-                else:
-                    return False
-            else:
-                return False
-        # If request is GET check that URL's customer_id matches with the customer_id
-        # of logged user, or user type is a seller
+        if is_seller == 'VEN':
+            return True
         else:
-            if user_id == customer_id or is_seller == 'VEN':
+            # If customer received by params matches with customer selected on User profile return True
+            customer_url = view.kwargs['customer_id']
+            customer_id = request.user.userinfo.customer_id_id
+            if customer_url == customer_id:
                 return True
             else:
                 return False

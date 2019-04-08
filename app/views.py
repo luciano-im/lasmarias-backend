@@ -115,7 +115,9 @@ class OrderList(generics.ListCreateAPIView):
     def perform_create(self, serializer):
         # Get current user
         req = serializer.context['request']
-        serializer.save(user_id=req.user)
+        customer_id = self.kwargs['customer_id']
+        customer = Customer.objects.get(customer_id=customer_id)
+        serializer.save(user_id=req.user, customer_id=customer)
 
 
 class OrderDetail(generics.RetrieveUpdateAPIView):
