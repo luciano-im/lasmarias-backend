@@ -285,6 +285,7 @@ class ProductsResource(resources.ModelResource):
 			row['offer'] = False
 		elif row['offer'] == 'S':
 			row['offer'] = True
+		row['product_id'] = row['product_id'].strip()
 
 
 class AccountBalanceResource(resources.ModelResource):
