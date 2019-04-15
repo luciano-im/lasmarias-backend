@@ -211,7 +211,7 @@ class OrderAdmin(admin.ModelAdmin):
 	inlines = (OrderItemsInline, )
 	list_display = ('order_id', 'get_customer_id', 'customer_id', 'date', 'status', 'payment', 'shipping', 'get_total_format', 'get_user_email', 'download_link')
 	list_filter = ('status', 'shipping', 'date', 'customer_id', 'payment')
-	readonly_fields = ('download_link',)
+	readonly_fields = ('download_link', 'created_at')
 
 	def download_link(self, obj):
 		return format_html('<a href="{}" style="color:#35B78F;border-bottom:1px solid #35B78F;">Exportar</a>', reverse('export-order', args=[obj.order_id]))

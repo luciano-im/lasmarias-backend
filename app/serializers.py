@@ -95,11 +95,12 @@ class OrderItemsSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
+    created_at = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S', input_formats=['%Y-%m-%dT%H:%M:%S'])
     items = OrderItemsSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = ('order_id', 'user_id', 'customer_id', 'status', 'payment', 'date', 'discount', 'shipping', 'items')
+        fields = ('order_id', 'user_id', 'customer_id', 'status', 'payment', 'date', 'discount', 'shipping', 'created_at', 'items')
         read_only_fields = ('user_id', 'customer_id')
     
     def create(self, validated_data):
@@ -120,6 +121,7 @@ class OrderSerializer(serializers.ModelSerializer):
         instance.date = validated_data.get('date', instance.date)
         instance.discount = validated_data.get('discount', instance.discount)
         instance.shipping = validated_data.get('shipping', instance.shipping)
+        instance.created_at = validated_data.get('created_at', instance.created_at)
         instance.save()
 
         for item_data in items_data:

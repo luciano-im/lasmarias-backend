@@ -1,5 +1,7 @@
 import requests
 
+from django.db import IntegrityError
+
 from django.conf import settings
 from django.contrib.admin.views.decorators import staff_member_required
 from django.contrib.sites.models import Site
@@ -118,6 +120,17 @@ class OrderList(generics.ListCreateAPIView):
         customer_id = self.kwargs['customer_id']
         customer = Customer.objects.get(customer_id=customer_id)
         serializer.save(user_id=req.user, customer_id=customer)
+    
+    def create(self, request, *args, **kwargs):
+        try:
+            return super(generics.ListCreateAPIView, self).create(request, *args, **kwargs)
+        except IntegrityError as e:
+            if 'Duplicate entry' in e.args[1]:
+                content = {'error': 'Pedido duplicado'}
+                return Response(content, status=status.HTTP_409_CONFLICT)
+            else:
+                content = {'error': 'IntegrityError'}
+                return Response(content, status=status.HTTP_400_BAD_REQUEST)
 
 
 class OrderDetail(generics.RetrieveUpdateAPIView):

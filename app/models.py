@@ -144,6 +144,7 @@ class Order(models.Model):
     date = models.DateField(verbose_name='Fecha del Pedido')
     discount = models.FloatField(verbose_name='Descuento', help_text='%')
     shipping = models.CharField(max_length=3, choices=SHIPPING_TYPE, verbose_name='Entrega')
+    created_at = models.DateTimeField(verbose_name='Fecha/Hora de Creación')
 
     def get_total(self):
         return sum(item.get_cost() for item in self.items.all())
@@ -154,6 +155,7 @@ class Order(models.Model):
     class Meta:
         verbose_name = 'Pedido'
         verbose_name_plural = 'Pedidos'
+        unique_together = (('customer_id', 'created_at'),)
 
 
 class OrderItems(models.Model):
