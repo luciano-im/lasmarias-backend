@@ -84,7 +84,6 @@ admin.site.unregister(EmailAddress)
 
 class UserInfoAdmin(admin.ModelAdmin):
 	list_display = ('get_user_email', 'get_customer_id', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created',)
-	# list_display = ('get_user_email', 'customer_id', 'user_type', 'get_user_last_login', 'get_user_created',)
 	list_filter = ('user__email', 'customer_id__customer_id', 'customer_id', 'user_type',)
 	readonly_fields=('email', 'related_name', 'related_last_name', 'related_customer_name', 'related_telephone', 'related_cel_phone', 'related_customer_address', 'related_city', 'related_zip_code',)
 	fieldsets = (
@@ -109,16 +108,17 @@ class UserInfoAdmin(admin.ModelAdmin):
 			return None
 
 	def get_user_created(self, obj):
-		return obj.user.date_joined
+		return obj.user.date_joined.strftime("%d/%m/%Y %H:%M")
 
 	def get_user_last_login(self, obj):
-		return obj.user.last_login
+		return obj.user.last_login.strftime("%d/%m/%Y %H:%M")
 
 	get_user_email.short_description = 'Usuario'
 	get_customer_id.short_description = 'Código de Cliente'
 	get_user_created.short_description = 'Fecha de Alta'
 	get_user_last_login.short_description = 'Último Ingreso'
 
+	get_user_email.admin_order_field = 'email'
 
 class CustomerAdmin(admin.ModelAdmin):
 	list_display = ('customer_id', 'name', 'address', 'city', 'cuit', 'telephone', 'discount')
@@ -149,10 +149,10 @@ class ProductsAdmin(admin.ModelAdmin):
 	list_filter = ('name', 'brand', 'product_line', 'unit')
 
 	def get_price(self, obj):
-		return "$ %s" % obj.price
+		return "$ {:,.2f}".format(obj.price)
 
 	def get_offer_price(self, obj):
-		return "$ %s" % obj.offer_price
+		return "$ {:,.2f}".format(obj.offer_price)
 
 	get_price.short_description = 'Precio'
 	get_offer_price.short_description = 'Precio Oferta'
@@ -166,30 +166,41 @@ class InvoiceItemsInline(admin.TabularInline):
 
 class InvoiceAdmin(admin.ModelAdmin):
 	inlines = (InvoiceItemsInline, )
-	list_display = ('number', 'get_customer_id', 'customer_id', 'date', 'get_total_format')
+	list_display = ('number', 'get_customer_id', 'customer_id', 'date_format', 'get_total_format')
 
 	def get_customer_id(self, obj):
 		return obj.customer_id.customer_id
 
 	def get_total_format(self, obj):
-		return "$ %s" % obj.get_total()
+		return "$ {:,.2f}".format(obj.get_total())
+	
+	def date_format(self, obj):
+		return obj.date.strftime("%d/%m/%Y")
 
 	get_customer_id.short_description = 'Código de Cliente'
 	get_total_format.short_description = 'Total'
+	date_format.short_description = 'Fecha'
+
+	date_format.admin_order_field = 'date'
 
 
 class AccountBalanceAdmin(admin.ModelAdmin):
-	list_display = ('get_customer_id', 'customer_id', 'voucher', 'date', 'get_balance')
+	list_display = ('get_customer_id', 'customer_id', 'voucher', 'date_format', 'get_balance')
 
 	def get_customer_id(self, obj):
 		return obj.customer_id.customer_id
 
 	def get_balance(self, obj):
-		return "$ %s" % obj.balance
+		return "$ {:,.2f}".format(obj.balance)
+	
+	def date_format(self, obj):
+		return obj.date.strftime("%d/%m/%Y")
 
 	get_customer_id.short_description = 'Código de Cliente'
 	get_balance.short_description = 'Saldo'
+	date_format.short_description = 'Fecha del Comprobante'
 
+	date_format.admin_order_field = 'date'
 
 class PaymentMethodsAdmin(admin.ModelAdmin):
 	list_display = ('payment', 'sort')
@@ -204,31 +215,50 @@ class OrderStatusAdmin(admin.ModelAdmin):
 class OrderItemsInline(admin.TabularInline):
 	model = OrderItems
 	verbose_name_plural = 'Productos'
-	extra = 1
+	extra = 0
 
 
 class OrderAdmin(admin.ModelAdmin):
 	inlines = (OrderItemsInline, )
-	list_display = ('order_id', 'get_customer_id', 'customer_id', 'date', 'status', 'payment', 'shipping', 'get_total_format', 'get_user_email', 'download_link')
+	list_display = ('order_id', 'get_customer_id', 'customer_id', 'date_format', 'status', 'payment', 'shipping', 'get_total_format', 'email', 'download_link')
 	list_filter = ('status', 'shipping', 'date', 'customer_id', 'payment')
-	readonly_fields = ('download_link', 'created_at')
+	readonly_fields = ('email', 'download_link', 'created_at')
+	fieldsets = (
+		(None, {
+			'fields': ('email',),
+		}),
+		(None, {
+			'fields': ('customer_id',),
+		}),
+		(None, {
+			'fields': ('date', 'status', 'payment', 'shipping',)
+		}),
+		(None, {
+			'fields': ('download_link',)
+		}),
+		(None, {
+			'fields': ('created_at',)
+		})
+	)
 
 	def download_link(self, obj):
 		return format_html('<a href="{}" style="color:#35B78F;border-bottom:1px solid #35B78F;">Exportar</a>', reverse('export-order', args=[obj.order_id]))
-	download_link.short_description = "CSV"
-
-	def get_user_email(self, obj):
-		return obj.user_id.email
 
 	def get_customer_id(self, obj):
 		return obj.customer_id.customer_id
 
 	def get_total_format(self, obj):
-		return "$ %s" % obj.get_total()
+		return "$ {:,.2f}".format(obj.get_total())
+	
+	def date_format(self, obj):
+		return obj.date.strftime("%d/%m/%Y")
 
-	get_user_email.short_description = 'Usuario'
+	download_link.short_description = "CSV"
 	get_customer_id.short_description = 'Nro Cliente'
 	get_total_format.short_description = 'Total'
+	date_format.short_description = 'Fecha'
+
+	date_format.admin_order_field = 'date'
 
 
 class TokenAdmin(admin.ModelAdmin):

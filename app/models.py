@@ -149,6 +149,11 @@ class Order(models.Model):
     def get_total(self):
         return sum(item.get_cost() for item in self.items.all())
 
+    def email(self):
+        return self.user_id.email
+
+    email.short_description = 'Usuario'
+
     def __str__(self):
         return str(self.order_id)
 
@@ -162,10 +167,10 @@ class OrderItems(models.Model):
     order_id = models.ForeignKey(Order, on_delete=models.CASCADE, verbose_name='Código de Pedido', related_name='items')
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Código de Producto')
     price = models.FloatField(verbose_name='Precio')
-    quantity = models.FloatField(verbose_name='Cantidad')
+    quantity = models.IntegerField(verbose_name='Cantidad')
 
     def get_cost(self):
-        return self.price * self.quantity
+        return round(self.price * self.quantity, 2)
 
     def __str__(self):
         return str(self.order_id)
