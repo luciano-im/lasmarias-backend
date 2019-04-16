@@ -39,8 +39,8 @@ class ProfileRegisterSerializer(RegisterSerializer):
 class UserInfoSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserInfo
-        fields = ('related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code')
-
+        fields = ('user', 'related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code')
+        read_only_fields = ('user',)
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:

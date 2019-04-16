@@ -28,6 +28,7 @@ from app.views import OrderList, OrderDetail
 from app.views import ConfirmEmail
 from app.views import SendConfirmEmail
 from app.views import ExportOrder
+from app.views import UserInfoDetail
 from app.views import CustomLoginView
 from app.views import PublishMessage
 
@@ -42,7 +43,7 @@ urlpatterns = [
     path('rest-auth/registration/send-account-confirm-email/', SendConfirmEmail, name="send_account_confirm_email"),
     # re_path(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', TemplateView.as_view(),  name='password_reset_confirm'),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
-    # path('api/registration/user-related-info/', SaveUserInfo, name="save_user_info"),
+    path('api/user/', UserInfoDetail.as_view()),
     path('api/customer/', CustomerList.as_view()),
     path('api/customer/<customer_id>/', CustomerDetail.as_view()),
     path('api/product/', ProductList.as_view()),

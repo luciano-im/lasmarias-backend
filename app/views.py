@@ -108,7 +108,7 @@ class InvoiceDetail(generics.ListAPIView):
 
 class OrderList(generics.ListCreateAPIView):
     serializer_class = OrderSerializer
-    #permission_classes = (IsAuthenticated, HasPermissionOrSeller)
+    permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
         customer_id = self.kwargs['customer_id']
@@ -144,6 +144,16 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
         return Order.objects.filter(customer_id=customer_id, order_id=order_id)
 
 
+class UserInfoDetail(generics.RetrieveUpdateAPIView):
+    serializer_class = UserInfoSerializer
+    permission_classes = (IsAuthenticated,)
+    lookup_field = 'user'
+
+    def get_object(self):
+        user = self.request.user
+        return UserInfo.objects.filter(user=user)
+
+
 class CustomLoginView(LoginView):
     def get_response(self):
         original_response = super().get_response()
@@ -151,33 +161,6 @@ class CustomLoginView(LoginView):
         my_data = {'user_type': user_type}
         original_response.data.update(my_data)
         return original_response
-
-
-# @api_view(['POST'])
-# def SaveUserInfo(request):
-#     if request.method == 'POST':
-#         # data = JSONParser().parse(request)
-#         data = request.data
-#         email = data['email']
-#         serializer = UserInfoSerializer(data=data)
-#         if serializer.is_valid():
-#             data = serializer.data
-#             user = User.objects.get(email=email)
-#             profile = UserInfo.objects.get(user_id=user.pk)
-            
-#             profile.related_name = data['related_name']
-#             profile.related_last_name = data['related_last_name']
-#             profile.related_customer_name = data['related_customer_name']
-#             profile.related_customer_address = data['related_customer_address']
-#             profile.related_telephone = data['related_telephone']
-#             profile.related_cel_phone = data['related_cel_phone']
-#             profile.related_city = data['related_city']
-#             profile.related_zip_code = data['related_zip_code']
-#             profile.save()
-
-#             return Response(serializer.data, status=status.HTTP_200_OK)
-#         else:
-#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
