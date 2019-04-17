@@ -176,7 +176,11 @@ ACCOUNT_EMAIL_CONFIRMATION_EXPIRE_DAYS = 30
 
 #Django-Rest-Auth
 REST_AUTH_REGISTER_SERIALIZERS = {
-    'REGISTER_SERIALIZER': 'app.serializers.ProfileRegisterSerializer'
+    'REGISTER_SERIALIZER': 'app.serializers.ProfileRegisterSerializer',
+}
+
+REST_AUTH_SERIALIZERS = {
+    'USER_DETAILS_SERIALIZER': 'app.serializers.UserSerializer',
 }
 
 #Django-Rest-Framework

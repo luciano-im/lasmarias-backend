@@ -35,7 +35,6 @@ from app.models import Order
 from app.models import OrderItems
 from app.models import CSVFilesData
 
-from app.serializers import UserInfoSerializer
 from app.serializers import CustomerSerializer
 from app.serializers import ProductSerializer
 from app.serializers import AccountBalanceSerializer
@@ -142,16 +141,6 @@ class OrderDetail(generics.RetrieveUpdateAPIView):
         customer_id = self.kwargs['customer_id']
         order_id = self.kwargs['order_id']
         return Order.objects.filter(customer_id=customer_id, order_id=order_id)
-
-
-class UserInfoDetail(generics.RetrieveUpdateAPIView):
-    serializer_class = UserInfoSerializer
-    permission_classes = (IsAuthenticated,)
-    lookup_field = 'user'
-
-    def get_object(self):
-        user = self.request.user
-        return UserInfo.objects.filter(user=user)
 
 
 class CustomLoginView(LoginView):

@@ -1,5 +1,8 @@
+from django.contrib.auth import get_user_model
+
 from rest_framework import serializers
 from rest_auth.registration.serializers import RegisterSerializer
+from rest_auth.serializers import UserDetailsSerializer
 
 from app.models import UserInfo
 from app.models import Customer
@@ -36,11 +39,47 @@ class ProfileRegisterSerializer(RegisterSerializer):
         profile.save()
 
 
-class UserInfoSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserInfo
-        fields = ('user', 'related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code')
-        read_only_fields = ('user',)
+class UserSerializer(UserDetailsSerializer):
+    related_name = serializers.CharField(max_length=120, source="userinfo.related_name")
+    related_last_name = serializers.CharField(max_length=120, source="userinfo.related_last_name")
+    related_customer_name = serializers.CharField(max_length=150, source="userinfo.related_customer_name")
+    related_customer_address = serializers.CharField(max_length=150, source="userinfo.related_customer_address")
+    related_telephone = serializers.CharField(required=False, default='', max_length=15, source="userinfo.related_telephone")
+    related_cel_phone = serializers.CharField(max_length=15, source="userinfo.related_cel_phone")
+    related_city = serializers.CharField(max_length=80, source="userinfo.related_city")
+    related_zip_code = serializers.CharField(max_length=15, source="userinfo.related_zip_code")
+
+    class Meta(UserDetailsSerializer.Meta):
+        fields = ('email', 'related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code')
+        read_only_fields = ('email',)
+    
+    def update(self, instance, validated_data):
+        profile_data = validated_data.pop('userinfo', {})
+        related_name = profile_data.get('related_name')
+        related_last_name = profile_data.get('related_last_name')
+        related_customer_name = profile_data.get('related_customer_name')
+        related_customer_address = profile_data.get('related_customer_address')
+        related_telephone = profile_data.get('related_telephone')
+        related_cel_phone = profile_data.get('related_cel_phone')
+        related_city = profile_data.get('related_city')
+        related_zip_code = profile_data.get('related_zip_code')
+
+        instance = super(UserSerializer, self).update(instance, validated_data)
+
+        # get and update user profile
+        profile = instance.userinfo
+        if profile_data and related_name and related_last_name and related_customer_name and related_customer_address and related_cel_phone and related_city and related_zip_code:
+            profile.related_name = related_name
+            profile.related_last_name = related_last_name
+            profile.related_customer_name = related_customer_name
+            profile.related_customer_address = related_customer_address
+            profile.related_telephone = related_telephone
+            profile.related_cel_phone = related_cel_phone
+            profile.related_city = related_city
+            profile.related_zip_code = related_zip_code
+            profile.save()
+        return instance
+
 
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
