@@ -44,7 +44,7 @@ class Products(models.Model):
 
 
 def product_image_path(instance, filename):
-    return 'products/{0}/{1}'.format(instance.product_id.id, filename)
+    return 'products/{0}/{1}'.format(instance.product_id.product_id, filename)
 
 class ProductImages(models.Model):
     # Set related_name to use backward relationships on ProductSerializer
