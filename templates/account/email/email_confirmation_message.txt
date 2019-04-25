@@ -1,0 +1,17 @@
+{% load account %}
+{% user_display user as user_display %}
+{% load i18n %}
+{% autoescape off %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+    Su cuenta de {{ site_name }} está casi lista!
+
+    Hemos recibido una solicitud de registro de usuario usando este email. Por favor use el enlace a continuación para confirmar su cuenta.
+    {{ activate_url }}
+
+    Si recibió este mensaje por error, simplemente ignorelo o eliminelo.
+{% endblocktrans %}
+{% endautoescape %}
+{% blocktrans with site_name=current_site.name site_domain=current_site.domain %}
+    Muchas gracias por elegir {{ site_name }}!
+    El equipo de {{ site_name }}
+{% endblocktrans %}

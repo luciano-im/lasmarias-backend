@@ -111,7 +111,8 @@ class UserInfoAdmin(admin.ModelAdmin):
 		return obj.user.date_joined.strftime("%d/%m/%Y %H:%M")
 
 	def get_user_last_login(self, obj):
-		return obj.user.last_login.strftime("%d/%m/%Y %H:%M")
+		if obj.user.last_login:
+			return obj.user.last_login.strftime("%d/%m/%Y %H:%M")
 
 	get_user_email.short_description = 'Usuario'
 	get_customer_id.short_description = 'Código de Cliente'

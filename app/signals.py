@@ -2,6 +2,7 @@ import requests
 from django.db.models.signals import pre_save, post_save
 from django.dispatch import receiver
 from django.conf import settings
+from django.template.loader import render_to_string
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.models import User
 from app.models import UserInfo
@@ -21,14 +22,17 @@ def postSave_User(sender, instance, created, **kwargs):
     # If it's a new user and it's not staff member
     if created == True and not instance.is_staff:
         # send an email to the administrator
+        message = render_to_string('admin_new_user.html', {'user_email':instance.email})
+
         requests.post(
             settings.EMAIL_URL,
             auth=('api', settings.EMAIL_KEY),
             data={
-                'from': 'Nuevo Usuario Las Marias' + '<' + instance.email + '>',
+                'from': instance.email + '<' + instance.email + '>',
                 'to': ['luciano@lbartevisual.com.ar'],
-                'subject': 'Nuevo Usuario en Las Marias App',
-                'text': 'Se ha registrado un nuevo usuario en la aplicación de Las Marias con el email ' + instance.email
+                'subject': 'Nuevo Usuario en App Las Marias',
+                'text': 'Se ha registrado un nuevo usuario en la aplicación de Las Marias con el email ' + instance.email,
+                'html': message
             }
         )
 

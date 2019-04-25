@@ -59,4 +59,4 @@ urlpatterns = [
 
     # Signal put new user as inactive, and allauth needs this url for reverse redirection
     path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),
-] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
