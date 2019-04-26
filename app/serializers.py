@@ -2,7 +2,8 @@ from django.contrib.auth import get_user_model
 
 from rest_framework import serializers
 from rest_auth.registration.serializers import RegisterSerializer
-from rest_auth.serializers import UserDetailsSerializer
+from rest_auth.serializers import UserDetailsSerializer, PasswordResetSerializer
+from allauth.account.forms import ResetPasswordForm
 
 from app.models import UserInfo
 from app.models import Customer
@@ -79,6 +80,15 @@ class UserSerializer(UserDetailsSerializer):
             profile.related_zip_code = related_zip_code
             profile.save()
         return instance
+
+class CustomPasswordResetSerializer(PasswordResetSerializer):
+    password_reset_form_class = ResetPasswordForm
+    
+    def get_email_options(self):
+        return {
+            'email_template_name': 'account/email/password_reset_key_message.txt',
+            'html_email_template_name': 'account/email/password_reset_key_message.html',
+        }
 
 
 class CustomerSerializer(serializers.ModelSerializer):

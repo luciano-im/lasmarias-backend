@@ -40,7 +40,7 @@ urlpatterns = [
     path('rest-auth/', include('rest_auth.urls')),
     re_path(r"^rest-auth/registration/account-confirm-email/(?P<key>[\s\d\w().+-_',:&]+)/$", ConfirmEmail, name="account_confirm_email"),
     path('rest-auth/registration/send-account-confirm-email/', SendConfirmEmail, name="send_account_confirm_email"),
-    # re_path(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', TemplateView.as_view(),  name='password_reset_confirm'),
+    re_path(r'^password-reset/confirm/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$', TemplateView.as_view(),  name='password_reset_confirm'),
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('api/customer/', CustomerList.as_view()),
     path('api/customer/<customer_id>/', CustomerDetail.as_view()),
@@ -57,6 +57,8 @@ urlpatterns = [
     # PubNub publish test URL
     path('publish/', PublishMessage),
 
+    # Include allauth urls to prevent errors with reverse redirection of some urls like password reset and inactive account
+    path('accounts/', include('allauth.urls')),
     # Signal put new user as inactive, and allauth needs this url for reverse redirection
-    path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),
+    # path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

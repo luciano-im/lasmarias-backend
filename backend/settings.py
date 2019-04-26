@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     'rest_auth.registration',
 
     'import_export',
+    'anymail',
     'app',
 ]
 
@@ -181,6 +182,7 @@ REST_AUTH_REGISTER_SERIALIZERS = {
 
 REST_AUTH_SERIALIZERS = {
     'USER_DETAILS_SERIALIZER': 'app.serializers.UserSerializer',
+    'PASSWORD_RESET_SERIALIZER': 'app.serializers.CustomPasswordResetSerializer'
 }
 
 #Django-Rest-Framework
@@ -194,12 +196,21 @@ REST_FRAMEWORK = {
 IMPORT_EXPORT_USE_TRANSACTIONS = True
 FTP_IMPORT_DIR = os.path.join(BASE_DIR, 'ftp')
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 with open(BASE_DIR+'/email.txt') as f:
     db = f.read().strip().split('#')
     EMAIL_URL = db[0]
     EMAIL_KEY = db[1]
 
+EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+# For testing only - show emails in console
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+ANYMAIL = {
+    'MAILGUN_API_KEY': EMAIL_KEY,
+    'MAILGUN_SENDER_DOMAIN': EMAIL_URL,
+}
+DEFAULT_FROM_EMAIL = 'admin@luciano.im'
+SERVER_EMAIL = 'error@luciano.im'
 
 # PubNub Configuration
 with open(BASE_DIR+'/pubnub.txt') as f:
