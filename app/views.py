@@ -177,16 +177,11 @@ def SendConfirmEmail(request):
 
 
 def ConfirmEmail(request, key):
-    print("Confirmacion Email")
     current_site = get_current_site(request)
     domain = current_site.domain
     r = requests.post('http://'+domain+'/rest-auth/registration/verify-email/', {'key':key})
-    if r.status_code == 200:
-        html = "<html><body><h1>¡ Su cuenta ha sido activada !</h1></body></html>"
-        return HttpResponse(html)
-    else:
-        html = "<html><body><h1>No hemos podido activar su cuenta, por favor intentelo nuevamente.</h1><p>Si continúa recibiendo este mensaje, por favor pongase en contacto con Las Marias para resolver el inconveniente a la menor brevedad posible.</p></body></html>"
-        return HttpResponse(html)
+    context = {'result': r}
+    return render(request, 'confirm_email.html', context)
 
 
 @staff_member_required

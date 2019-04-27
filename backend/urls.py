@@ -58,7 +58,8 @@ urlpatterns = [
     path('publish/', PublishMessage),
 
     # Include allauth urls to prevent errors with reverse redirection of some urls like password reset and inactive account
-    path('accounts/', include('allauth.urls')),
+    #path('accounts/', include('allauth.urls')),
+    #re_path(r'^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$', TemplateView.as_view(), name="account_reset_password_from_key"),
     # Signal put new user as inactive, and allauth needs this url for reverse redirection
-    # path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),
+    path('inactive/', AccountInactiveView.as_view(), name='account_inactive'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

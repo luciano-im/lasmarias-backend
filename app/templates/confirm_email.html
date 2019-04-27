@@ -1,0 +1,40 @@
+{% extends 'index.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block pagetitle %}Las Marías - Confirmación de Cuenta{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block title %}
+  {% if result.status_code == 200 %}
+    ¡Cuenta Confirmada!
+  {% else %}
+    ¡Ha ocurrido un error!
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if result.status_code == 200 %}
+    <p>Su cuenta ha sido activada correctamente.</p>
+    <p>Ya puede iniciar sesión en la App con el usuario y contraseña que ingreso durante el proceso de registro.</p>
+    <p>Si no recuerda su contraseña puede ingresar en la opcion <span class="highlight">"Olvidé mi Contraseña"</span> en la pantalla de inicio de sesión de la App.</p>
+    <p>¡Muchas gracias por elegír Las Marías!</p>
+    <p class="signature">El equipo de <span class="highlight">Las Marías</span></p>
+  {% else %}
+    <p>Su cuenta <span class="highlight">NO</span> ha podido ser activada.</p>
+    <p>Por favor pongase en contacto con la Administracion para resolver el problema a la brevedad ya que no hemos podido verificar su cuenta.</p>
+    <p>Puede contactarnos en nuestra linea fija (<span class="highlight">02478-45XXXX</span>) o a nuestro número celular (<span class="highlight">02478-15-XXXXXX</span>), o tambien puede enviarnos un correo electrónico a la dirección: <a href="mailto:lasmarias@lasmarias.com" target="_blank">lasmarias@lasmarias.com</a></p>
+    <p>¡Muchas gracias por elegír Las Marías!</p>
+    <p class="signature">El equipo de <span class="highlight">Las Marías</span></p>
+  {% endif %}
+{% endblock %}
+
+{% block contact %}
+<h2>Tiene alguna duda?</h2>
+<p><a href="mailto:lasmarias@lasmarias.com" target="_blank">lasmarias@lasmarias.com</a></p>
+{% endblock %}
+
+{% block scriptjs %}
+{% endblock %}

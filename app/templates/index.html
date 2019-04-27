@@ -1,0 +1,69 @@
+{% load static from staticfiles %}
+{% load i18n %}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="initial-scale=1.0, width=device-width" />
+	<title>
+		{% block pagetitle %}{% endblock %}
+	</title>
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700,900" rel="stylesheet">
+	<link rel="stylesheet" href="{% static "css/styles.css" %}">
+
+	<!-- <link rel="apple-touch-icon" sizes="57x57" href="{% static "img/favicon/apple-icon-57x57.png" %}">
+	<link rel="apple-touch-icon" sizes="60x60" href="{% static "img/favicon/apple-icon-60x60.png" %}">
+	<link rel="apple-touch-icon" sizes="72x72" href="{% static "img/favicon/apple-icon-72x72.png" %}">
+	<link rel="apple-touch-icon" sizes="76x76" href="{% static "img/favicon/apple-icon-76x76.png" %}">
+	<link rel="apple-touch-icon" sizes="114x114" href="{% static "img/favicon/apple-icon-114x114.png" %}">
+	<link rel="apple-touch-icon" sizes="120x120" href="{% static "img/favicon/apple-icon-120x120.png" %}">
+	<link rel="apple-touch-icon" sizes="144x144" href="{% static "img/favicon/apple-icon-144x144.png" %}">
+	<link rel="apple-touch-icon" sizes="152x152" href="{% static "img/favicon/apple-icon-152x152.png" %}">
+	<link rel="apple-touch-icon" sizes="180x180" href="{% static "img/favicon/apple-icon-180x180.png" %}">
+	<link rel="icon" type="image/png" sizes="192x192"  href="{% static "img/favicon/android-icon-192x192.png" %}">
+	<link rel="icon" type="image/png" sizes="32x32" href="{% static "img/favicon/favicon-32x32.png" %}">
+	<link rel="icon" type="image/png" sizes="96x96" href="{% static "img/favicon/favicon-96x96.png" %}">
+	<link rel="icon" type="image/png" sizes="16x16" href="{% static "img/favicon/favicon-16x16.png" %}">
+	<link rel="manifest" href="{% static "img/favicon/manifest.json" %}">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-TileImage" content="{% static "img/favicon/ms-icon-144x144.png" %}">
+	<meta name="theme-color" content="#ffffff"> -->
+
+	{% block head %}{% endblock %}
+</head>
+<body>
+	<header>
+		<div class="maxwidth">
+      <div class="logo">
+        <img src="{% static "img/logo.png" %}" alt="Las Marías Distribuidora">
+			</div>
+			<div class="title">
+				<h1>{% block title %}{% endblock %}</h1>
+			</div>
+		</div>
+	</header>
+	<section class="content-body">
+		<div class="maxwidth">
+			<div class="content">
+				{% block content %}{% endblock %}
+			</div>
+		</div>
+	</section>
+	<section class="contact-body">
+		<div class="maxwidth">
+			<div class="contact">
+				{% block contact %}{% endblock %}
+			</div>
+		</div>
+	</section>
+	<footer>
+		<div class="maxwidth">
+			<p>Teléfono: <span class="highlight">02478-45XXXX</span>  /  Celular: <span class="highlight">02478-15-XXXXXX</span></p>
+			<p>Las Marías - Ruta 8 Km XXX - Arrecifes, Bs. As. - 2740</p>
+		</div>
+	</footer>
+	{% block scriptjs %}{% endblock %}
+</body>
+</html>

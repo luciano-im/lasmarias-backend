@@ -1,0 +1,105 @@
+html, body {
+  background-color: #f4f4f4;
+  box-sizing: border-box;
+  font-family: 'Lato', Helvetica, Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0;
+}
+
+.maxwidth {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.highlight {
+  color: #006DA8;
+}
+
+.signature {
+  font-size: 17px !important;
+  line-height: 8px !important;
+  margin-top: 30px;
+}
+
+header {
+  background-color: #006DA8;
+  padding: 0 1em;
+}
+
+header .logo {
+  padding: 20px 0;
+  text-align: center;
+}
+
+header .title {
+  background-color: white;
+  border-radius: 4px 4px 0px 0px;
+  color: #111111;
+  font-size: 25px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  line-height: 48px;
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.content-body {
+  background-color: #f4f4f4;
+  padding: 0 1em;
+}
+
+.content-body .content {
+  background-color: white;
+  border-radius: 0px 0px 4px 4px;
+  padding: 20px 40px;
+}
+
+.content p {
+  padding: 10px 0;
+  color: #666666;
+  font-size: 20px;
+  font-weight: 400;
+  line-height: 25px;
+}
+
+.content a {
+  color: #006DA8;
+}
+
+.contact-body {
+  background-color: #f4f4f4;
+  padding: 20px 1em;
+}
+
+.contact-body .contact {
+  background-color: #E5E5E5;
+  border-radius: 4px 4px 4px 4px;
+  padding: 20px 40px;
+  text-align: center;
+}
+
+.contact h2 {
+  color: #111111;
+  font-size: 20px;
+  font-weight: 400;
+  margin: 0;
+}
+
+.contact a {
+  color: #006DA8;
+}
+
+footer {
+  background-color: #f4f4f4;
+  padding: 20px 1em;
+}
+
+footer p {
+  padding: 5px 0;
+  color: #666666;
+}
