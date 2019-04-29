@@ -17,7 +17,7 @@ p {
 }
 
 .highlight {
-  color: #006DA8;
+  color: #006DA8 !important;
 }
 
 .signature {
@@ -59,7 +59,7 @@ header .title {
   padding: 20px 40px;
 }
 
-.content p {
+.content > p {
   padding: 10px 0;
   color: #666666;
   font-size: 20px;
@@ -102,4 +102,47 @@ footer {
 footer p {
   padding: 5px 0;
   color: #666666;
+}
+
+form {
+  border-radius: 4px;
+  margin: 20px 0;
+  padding: 20px 0 10px 0;
+  text-align: center;
+}
+
+form p {
+  margin-bottom: 20px;
+  color: #006DA8;
+}
+
+form label {
+  display: inline-block;
+  display: none;
+  width: 230px;
+}
+
+form input[type="password"] {
+  background-color: #f4f4f4;
+  border: none;
+  border-radius: 3px;
+  font-size: 15px;
+  height: 25px;
+  padding: 3px 6px;
+  outline: 0;
+  width: 230px;
+}
+
+form input[type="submit"] {
+  border: 0;
+  border-radius: 4px;
+  font-size: 15px;
+  background-color: #006DA8;
+  padding: 8px 12px;
+  color: white;
+  margin-top: 20px;
+}
+
+form input[type="submit"]:hover {
+  box-shadow: 2px 2px 2px #BBBBBB;
 }
