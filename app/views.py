@@ -23,7 +23,7 @@ from rest_framework.response import Response
 
 from rest_auth.views import LoginView
 
-from allauth.account.models import EmailConfirmation, EmailAddress
+from allauth.account.models import EmailConfirmation, EmailConfirmationHMAC, EmailAddress
 
 from django.contrib.auth.models import User
 from app.models import UserInfo
@@ -177,11 +177,16 @@ def SendConfirmEmail(request):
 
 
 def ConfirmEmail(request, key):
-    current_site = get_current_site(request)
-    domain = current_site.domain
-    r = requests.post('http://'+domain+'/rest-auth/registration/verify-email/', {'key':key})
-    context = {'result': r}
-    return render(request, 'confirm_email.html', context)
+    emailconfirmation = EmailConfirmationHMAC.from_key(key)
+    if not emailconfirmation:
+        qs = EmailConfirmation.objects.all_valid()
+        queryset = qs.select_related("email_address__user")
+        try:
+            emailconfirmation = queryset.get(key=key.lower())
+        except EmailConfirmation.DoesNotExist:
+            return render(request, 'confirm_email.html', {'error':True})
+    emailconfirmation.confirm(request)
+    return render(request, 'confirm_email.html', {'error':False})
 
 
 @staff_member_required
