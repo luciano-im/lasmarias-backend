@@ -162,12 +162,12 @@ class ProductsAdmin(admin.ModelAdmin):
 class InvoiceItemsInline(admin.TabularInline):
 	model = InvoiceItems
 	verbose_name_plural = 'Productos'
-	extra = 1
+	extra = 0
 
 
 class InvoiceAdmin(admin.ModelAdmin):
 	inlines = (InvoiceItemsInline, )
-	list_display = ('number', 'get_customer_id', 'customer_id', 'date_format', 'get_total_format')
+	list_display = ('invoice_id', 'get_customer_id', 'customer_id', 'date_format', 'get_iva_format', 'get_taxes_format', 'get_total_format')
 
 	def get_customer_id(self, obj):
 		return obj.customer_id.customer_id
@@ -175,11 +175,19 @@ class InvoiceAdmin(admin.ModelAdmin):
 	def get_total_format(self, obj):
 		return "$ {:,.2f}".format(obj.get_total())
 	
+	def get_iva_format(self, obj):
+		return "$ {:,.2f}".format(obj.iva)
+	
+	def get_taxes_format(self, obj):
+		return "$ {:,.2f}".format(obj.taxes)
+	
 	def date_format(self, obj):
 		return obj.date.strftime("%d/%m/%Y")
 
 	get_customer_id.short_description = 'Código de Cliente'
 	get_total_format.short_description = 'Total'
+	get_iva_format.short_description = 'IVA'
+	get_taxes_format.short_description = 'Percepciones'
 	date_format.short_description = 'Fecha'
 
 	date_format.admin_order_field = 'date'
@@ -328,7 +336,29 @@ class AccountBalanceResource(resources.ModelResource):
 	
 	def before_import_row(self, row, **kwargs):
 		row['date'] = datetime.datetime.strptime(row['date'], "%d/%m/%Y").strftime("%Y-%m-%d")
-		
+
+
+class InvoicesResource(resources.ModelResource):
+
+	class Meta:
+		model = Invoices
+		import_id_fields = ('invoice_id','customer_id','invoice_type','invoice_branch','invoice_number','date','iva','taxes',)
+		skip_unchanged = True
+	
+	def before_import_row(self, row, **kwargs):
+		row['date'] = datetime.datetime.strptime(row['date'], "%d/%m/%Y").strftime("%Y-%m-%d")
+		row['invoice_id'] = row['invoice_type'].strip() + '-' + str(row['invoice_branch'].strip()) + '-' + str(row['invoice_number'].strip())	
+
+
+class InvoiceItemsResource(resources.ModelResource):
+
+	class Meta:
+		model = InvoiceItems
+		import_id_fields = ('invoice_id','invoice_type','invoice_branch','invoice_number','product_id','product_description','price','quantity','amount',)
+		skip_unchanged = True
+	
+	def before_import_row(self, row, **kwargs):
+		row['invoice_id'] = row['invoice_type'].strip() + '-' + str(row['invoice_branch'].strip()) + '-' + str(row['invoice_number'].strip())	
 
 
 class OrderResource(resources.ModelResource):

@@ -14,6 +14,8 @@ from pubnub.exceptions import PubNubException
 from app.admin import CustomerResource
 from app.admin import ProductsResource
 from app.admin import AccountBalanceResource
+from app.admin import InvoicesResource
+from app.admin import InvoiceItemsResource
 
 from app.models import CSVFilesData
 
@@ -136,3 +138,59 @@ def importAccountBalance():
             file_data.save()
     else:
         print('NO ACTUALIZO SALDOS DE CUENTA CORRIENTE')
+
+
+def importInvoices():
+    invoice_header_csv = os.path.join(settings.FTP_IMPORT_DIR, 'Comprobantes.CSV')
+    invoice_items_csv = os.path.join(settings.FTP_IMPORT_DIR, 'Comp_Items.CSV')
+
+    try:
+        # Get modified date/time
+        header_mtime = os.path.getmtime(invoice_header_csv)
+        items_mtime = os.path.getmtime(invoice_items_csv)
+        header_last_modified_date = datetime.fromtimestamp(header_mtime)
+        items_last_modified_date = datetime.fromtimestamp(items_mtime)
+    except OSError:
+        header_mtime = 0
+        items_mtime = 0
+
+    file_header_data = CSVFilesData.objects.get(file='Comprobantes')
+    file_items_data = CSVFilesData.objects.get(file='Comp_Items')
+
+    # Update if modified date/time has changed
+    if file_header_data.modified_date != str(header_last_modified_date):
+        print('ACTUALIZO CABECERA DE FACTURAS')
+        
+        f = open(invoice_header_csv, 'r')
+        dataset = tablib.import_set(f.read(), format='csv', delimiter=';', headers=False)
+        dataset.headers = ('customer_id','invoice_type','invoice_branch','invoice_number','date','iva','taxes')
+
+        invoice_header_resource = InvoicesResource()
+        # Test import
+        result = invoice_header_resource.import_data(dataset, dry_run=True)
+        # If result has no errors then import (create or update) the data
+        if not result.has_errors():
+            invoice_header_resource.import_data(dataset, dry_run=False)
+            # file_header_data.modified_date = header_last_modified_date
+            # file_header_data.save()
+    else:
+        print('NO ACTUALIZO CABECERA DE FACTURAS')
+    
+    if file_items_data.modified_date != str(items_last_modified_date):
+        print('ACTUALIZO ITEMS DE FACTURAS')
+        
+        f = open(invoice_items_csv, 'r')
+        dataset = tablib.import_set(f.read(), format='csv', delimiter=';', headers=False)
+        dataset.headers = ('invoice_type','invoice_branch','invoice_number','product_id','price','quantity','amount','product_description')
+
+        invoice_items_resource = InvoiceItemsResource()
+        # Test import
+        result = invoice_items_resource.import_data(dataset, dry_run=True)
+        # If result has no errors then import (create or update) the data
+        if not result.has_errors():
+            invoice_items_resource.import_data(dataset, dry_run=False)
+            # file_items_data.modified_date = items_last_modified_date
+            # file_items_data.save()
+    else:
+        print('NO ACTUALIZO ITEMS DE FACTURAS')
+

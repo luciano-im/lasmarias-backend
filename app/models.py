@@ -58,16 +58,23 @@ class ProductImages(models.Model):
         verbose_name = 'Imágen'
         verbose_name_plural = 'Imágenes'
 
+
 class Invoices(models.Model):
-    number = models.IntegerField(unique=True, verbose_name='Número de Factura')
+    #number = models.IntegerField(unique=True, verbose_name='Número de Factura')
+    invoice_id = models.CharField(primary_key=True, max_length=20, verbose_name='Número de Factura', default='FA-1-1')
     customer_id = models.ForeignKey(Customer, on_delete=models.CASCADE, verbose_name='Cliente')
+    invoice_type = models.CharField(default='FA', max_length=2, verbose_name='Tipo de Comprobante')
+    invoice_branch = models.CharField(default='1', max_length=4, verbose_name='Sucursal')
+    invoice_number = models.CharField(default='1', max_length=8, verbose_name='Número')
     date = models.DateField(verbose_name='Fecha de Factura')
+    iva = models.FloatField(default=0.00, verbose_name='IVA')
+    taxes = models.FloatField(default=0.00, verbose_name='Percepciones')
 
     def get_total(self):
         return sum(item.get_cost() for item in self.items.all())
 
     def __str__(self):
-        return str(self.number)
+        return str(self.invoice_id)
 
     class Meta:
         verbose_name = 'Factura'
@@ -75,16 +82,22 @@ class Invoices(models.Model):
 
 
 class InvoiceItems(models.Model):
-    invoice_number = models.ForeignKey(Invoices, to_field='number', on_delete=models.CASCADE, verbose_name='Número de Factura', related_name='items')
-    product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Código de Producto')
-    price = models.FloatField(verbose_name='Precio')
-    quantity = models.FloatField(verbose_name='Cantidad')
+    invoice_id = models.ForeignKey(Invoices, on_delete=models.CASCADE, verbose_name='Número de Factura', related_name='items', default='FA-1-1')
+    invoice_type = models.CharField(default='FA', max_length=2, verbose_name='Tipo de Comprobante')
+    invoice_branch = models.CharField(default='1', max_length=4, verbose_name='Sucursal')
+    invoice_number = models.CharField(default='1',max_length=8, verbose_name='Número')
+    #product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Código de Producto')
+    product_id = models.CharField(max_length=20, verbose_name='Código de Producto')
+    price = models.FloatField(default=0.00, verbose_name='Precio')
+    quantity = models.FloatField(default=0.00, verbose_name='Cantidad')
+    amount = models.FloatField(default=0.00, verbose_name='Importe')
+    product_description = models.CharField(null=True, blank=True, max_length=200, verbose_name='Descripción del Producto')
 
     def get_cost(self):
         return self.price * self.quantity
 
     def __str__(self):
-        return str(self.invoice_number)
+        return str(self.invoice_id)
 
     class Meta:
         verbose_name = 'Item'
