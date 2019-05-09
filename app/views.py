@@ -91,8 +91,29 @@ class InvoiceList(generics.ListAPIView):
     permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
-        customer_id = self.kwargs['customer_id']
-        return Invoices.objects.filter(customer_id=customer_id)
+        # from_date = datetime.datetime.strptime(from_date, '%d/%m/%Y').date()
+		# to_date = datetime.datetime.strptime(to_date, '%d/%m/%Y').date()
+        try:
+            customer_id = self.kwargs['customer_id']
+        except:
+            customer_id = None
+        try:
+            date_from = self.kwargs['date_from']
+        except:
+            date_from = None
+        try:
+            date_to = self.kwargs['date_to']
+        except:
+            date_to = None
+        
+        if customer_id is None and date_from is None and date_to is None:
+            return Invoices.objects.all().order_by('date')
+        elif customer_id is not None and date_from is None and date_to is None:
+            return Invoices.objects.filter(customer_id=customer_id).order_by('date')
+        elif customer_id is None and date_from is not None and date_to is not None:
+            return Invoices.objects.filter(date__range=[date_from, date_to]).order_by('date')
+        elif customer_id is not None and date_from is not None and date_to is not None:
+            return Invoices.objects.filter(customer_id=customer_id, date__range=[date_from, date_to]).order_by('date')
 
 
 class InvoiceDetail(generics.ListAPIView):
@@ -101,8 +122,8 @@ class InvoiceDetail(generics.ListAPIView):
 
     def get_queryset(self):
         customer_id = self.kwargs['customer_id']
-        invoice_number = self.kwargs['invoice_number']
-        return Invoices.objects.filter(customer_id=customer_id, number=invoice_number)
+        invoice_id = self.kwargs['invoice_id']
+        return Invoices.objects.filter(customer_id=customer_id, invoice_id=invoice_id)
 
 
 class OrderList(generics.ListCreateAPIView):

@@ -14,7 +14,10 @@ class HasPermissionOrSeller(permissions.BasePermission):
             return True
         else:
             # If customer received by params matches with customer selected on User profile return True
-            customer_url = view.kwargs['customer_id']
+            try:
+                customer_url = view.kwargs['customer_id']
+            except:
+                return False
             customer_id = request.user.userinfo.customer_id_id
             if customer_url == customer_id:
                 return True

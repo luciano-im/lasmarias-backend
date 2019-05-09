@@ -126,15 +126,16 @@ class AccountBalanceSerializer(serializers.ModelSerializer):
 class InvoiceItemsSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvoiceItems
-        fields = ('product_id', 'price', 'quantity')
+        fields = ('invoice_id', 'product_id', 'price', 'quantity', 'amount', 'product_description')
 
 
 class InvoiceSerializer(serializers.ModelSerializer):
+    customer_name = serializers.CharField(max_length=120, source="customer_id.name")
     items = InvoiceItemsSerializer(many=True, read_only=True)
 
     class Meta:
         model = Invoices
-        fields = ('number', 'customer_id', 'date', 'items')
+        fields = ('invoice_id', 'customer_id', 'customer_name', 'date', 'iva', 'taxes', 'items')
 
 
 class OrderItemsSerializer(serializers.ModelSerializer):
