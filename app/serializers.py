@@ -139,9 +139,9 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 
 class OrderItemsSerializer(serializers.ModelSerializer):
-    product_name = serializers.CharField(max_length=80, source="product_id.name")
-    product_brand = serializers.CharField(max_length=80, source="product_id.brand")
-    product_package = serializers.CharField(max_length=80, source="product_id.package")
+    product_name = serializers.CharField(max_length=80, read_only=True, source="product_id.name")
+    product_brand = serializers.CharField(max_length=80,read_only=True, source="product_id.brand")
+    product_package = serializers.CharField(max_length=80,read_only=True, source="product_id.package")
 
     class Meta:
         model = OrderItems
@@ -151,8 +151,8 @@ class OrderItemsSerializer(serializers.ModelSerializer):
 
 class OrderSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S', input_formats=['%Y-%m-%dT%H:%M:%S'])
-    user_customer_name = serializers.CharField(max_length=120, source="user_id.userinfo.customer_id.name")
-    customer_name = serializers.CharField(max_length=120, source="customer_id.name")
+    user_customer_name = serializers.CharField(max_length=120, read_only=True, source="user_id.userinfo.customer_id.name")
+    customer_name = serializers.CharField(max_length=120, read_only=True, source="customer_id.name")
     items = OrderItemsSerializer(many=True)
 
     class Meta:
