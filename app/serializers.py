@@ -139,19 +139,26 @@ class InvoiceSerializer(serializers.ModelSerializer):
 
 
 class OrderItemsSerializer(serializers.ModelSerializer):
+    product_name = serializers.CharField(max_length=80, source="product_id.name")
+    product_brand = serializers.CharField(max_length=80, source="product_id.brand")
+    product_package = serializers.CharField(max_length=80, source="product_id.package")
+
     class Meta:
         model = OrderItems
-        fields = ('product_id', 'price', 'quantity')
+        fields = ('product_id', 'product_name', 'product_brand', 'product_package', 'price', 'quantity')
+        read_only_fields = ('product_name', 'product_brand', 'product_package')
 
 
 class OrderSerializer(serializers.ModelSerializer):
     created_at = serializers.DateTimeField(format='%Y-%m-%dT%H:%M:%S', input_formats=['%Y-%m-%dT%H:%M:%S'])
+    user_customer_name = serializers.CharField(max_length=120, source="user_id.userinfo.customer_id.name")
+    customer_name = serializers.CharField(max_length=120, source="customer_id.name")
     items = OrderItemsSerializer(many=True)
 
     class Meta:
         model = Order
-        fields = ('order_id', 'user_id', 'customer_id', 'status', 'payment', 'date', 'discount', 'shipping', 'created_at', 'items')
-        read_only_fields = ('user_id', 'customer_id')
+        fields = ('order_id', 'user_id', 'user_customer_name', 'customer_id', 'customer_name', 'status', 'payment', 'date', 'discount', 'shipping', 'created_at', 'items')
+        read_only_fields = ('user_id', 'user_customer', 'customer_id', 'customer_name')
     
     def create(self, validated_data):
         items = validated_data.pop('items')

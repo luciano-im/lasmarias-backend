@@ -131,8 +131,29 @@ class OrderList(generics.ListCreateAPIView):
     permission_classes = (IsAuthenticated, HasPermissionOrSeller)
 
     def get_queryset(self):
-        customer_id = self.kwargs['customer_id']
-        return Order.objects.filter(customer_id=customer_id)
+        # from_date = datetime.datetime.strptime(from_date, '%d/%m/%Y').date()
+		# to_date = datetime.datetime.strptime(to_date, '%d/%m/%Y').date()
+        try:
+            customer_id = self.kwargs['customer_id']
+        except:
+            customer_id = None
+        try:
+            date_from = self.kwargs['date_from']
+        except:
+            date_from = None
+        try:
+            date_to = self.kwargs['date_to']
+        except:
+            date_to = None
+        
+        if customer_id is None and date_from is None and date_to is None:
+            return Order.objects.filter(~Q(status='Completado')).order_by('date')
+        elif customer_id is not None and date_from is None and date_to is None:
+            return Order.objects.filter(~Q(status='Completado'), customer_id=customer_id).order_by('date')
+        elif customer_id is None and date_from is not None and date_to is not None:
+            return Order.objects.filter(~Q(status='Completado'), date__range=[date_from, date_to]).order_by('date')
+        elif customer_id is not None and date_from is not None and date_to is not None:
+            return Order.objects.filter(~Q(status='Completado'), customer_id=customer_id, date__range=[date_from, date_to]).order_by('date')
 
     def perform_create(self, serializer):
         # Get current user
