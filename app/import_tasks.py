@@ -171,8 +171,8 @@ def importInvoices():
         # If result has no errors then import (create or update) the data
         if not result.has_errors():
             invoice_header_resource.import_data(dataset, dry_run=False)
-            # file_header_data.modified_date = header_last_modified_date
-            # file_header_data.save()
+            file_header_data.modified_date = header_last_modified_date
+            file_header_data.save()
     else:
         print('NO ACTUALIZO CABECERA DE FACTURAS')
     
@@ -189,8 +189,8 @@ def importInvoices():
         # If result has no errors then import (create or update) the data
         if not result.has_errors():
             invoice_items_resource.import_data(dataset, dry_run=False)
-            # file_items_data.modified_date = items_last_modified_date
-            # file_items_data.save()
+            file_items_data.modified_date = items_last_modified_date
+            file_items_data.save()
     else:
         print('NO ACTUALIZO ITEMS DE FACTURAS')
 

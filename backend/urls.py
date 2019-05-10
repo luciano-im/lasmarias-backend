@@ -56,8 +56,9 @@ urlpatterns = [
     path('api/balance/<customer_id>/', AcountBalanceDetail.as_view()),
     path('api/invoice/', InvoiceList.as_view()),
     path('api/invoice/<customer_id>/', InvoiceList.as_view()),
+    path('api/invoice/<date_from>/<date_to>/', InvoiceList.as_view()),
     path('api/invoice/<customer_id>/<date_from>/<date_to>/', InvoiceList.as_view()),
-    path('api/invoice/<customer_id>/<invoice_id>/', InvoiceDetail.as_view()),
+    path('api/invoice-detail/<customer_id>/<invoice_id>/', InvoiceDetail.as_view()),
     path('api/order/<customer_id>/', OrderList.as_view()),
     path('api/order/<customer_id>/<order_id>/', OrderDetail.as_view()),
 
