@@ -157,8 +157,8 @@ class OrderSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Order
-        fields = ('order_id', 'user_id', 'user_customer_name', 'customer_id', 'customer_name', 'status', 'payment', 'date', 'discount', 'shipping', 'created_at', 'items')
-        read_only_fields = ('user_id', 'user_customer', 'customer_id', 'customer_name')
+        fields = ('order_id', 'user_id', 'user_customer_name', 'customer_id', 'customer_name', 'status', 'payment', 'date', 'discount', 'shipping', 'created_at', 'get_total', 'items')
+        read_only_fields = ('user_id', 'user_customer', 'customer_id', 'customer_name', 'get_total')
     
     def create(self, validated_data):
         items = validated_data.pop('items')

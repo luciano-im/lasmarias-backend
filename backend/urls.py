@@ -59,6 +59,7 @@ urlpatterns = [
     path('api/invoice/<date_from>/<date_to>/', InvoiceList.as_view()),
     path('api/invoice/<customer_id>/<date_from>/<date_to>/', InvoiceList.as_view()),
     path('api/invoice-detail/<customer_id>/<invoice_id>/', InvoiceDetail.as_view()),
+    path('api/order/', OrderList.as_view()),
     path('api/order/<customer_id>/', OrderList.as_view()),
     path('api/order/<date_from>/<date_to>/', OrderList.as_view()),
     path('api/order/<customer_id>/<date_from>/<date_to>/', OrderList.as_view()),
