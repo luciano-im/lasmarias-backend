@@ -212,6 +212,7 @@ class UserInfo(models.Model):
     related_cel_phone = models.CharField(max_length=15, verbose_name='Celular')
     related_city = models.CharField(max_length=80, verbose_name='Localidad')
     related_zip_code = models.CharField(max_length=15, verbose_name='Código Postal')
+    related_cuit = models.CharField(max_length=11, default=0, verbose_name='CUIT / DNI')
 
     def email(self):
         return self.user.email
