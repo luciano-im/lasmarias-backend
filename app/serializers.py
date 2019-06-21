@@ -122,6 +122,18 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = ('product_id', 'name', 'brand', 'product_line', 'unit', 'price', 'offer', 'offer_price', 'package', 'images',)
 
 
+class ImagesSerializer(serializers.ModelSerializer):
+    image_relative_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductImages
+        fields = ('product_id', 'image_relative_url',)
+    
+    # Get relative path
+    def get_image_relative_url(self, obj):
+        return obj.image.url
+
+
 class AccountBalanceSerializer(serializers.ModelSerializer):
     class Meta:
         model = AccountBalance
