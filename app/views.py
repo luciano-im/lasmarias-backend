@@ -84,6 +84,17 @@ class ImagesList(generics.ListAPIView):
     serializer_class = ImagesSerializer
     permission_classes = (IsAuthenticated,)
 
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        image = ProductImages.objects.order_by('-date').values('date').first()
+
+        response_list = serializer.data 
+        response = Response(response_list)
+        response['Update-Date'] = image['date'].strftime("%Y-%m-%d %H:%M:%S")
+        return response
+
 
 class AcountBalanceDetail(generics.ListAPIView):
     serializer_class = AccountBalanceSerializer
