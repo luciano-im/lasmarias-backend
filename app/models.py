@@ -50,6 +50,7 @@ class ProductImages(models.Model):
     # Set related_name to use backward relationships on ProductSerializer
     product_id = models.ForeignKey(Products, on_delete=models.CASCADE, verbose_name='Producto', related_name='images')
     image = ResizedImageField(upload_to=product_image_path, max_length=200, size=[200, 200], blank=True, null=True, verbose_name='Imágen')
+    date = models.DateTimeField(auto_now=True, verbose_name='Fecha de Creación / Actualización')
 
     def __str__(self):
         return str('')
@@ -212,6 +213,7 @@ class UserInfo(models.Model):
     related_cel_phone = models.CharField(max_length=15, verbose_name='Celular')
     related_city = models.CharField(max_length=80, verbose_name='Localidad')
     related_zip_code = models.CharField(max_length=15, verbose_name='Código Postal')
+    related_cuit = models.CharField(max_length=11, default=0, verbose_name='CUIT / DNI')
 
     def email(self):
         return self.user.email

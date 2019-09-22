@@ -25,6 +25,7 @@ class ProfileRegisterSerializer(RegisterSerializer):
     related_cel_phone = serializers.CharField(max_length=15, source="userinfo.related_cel_phone")
     related_city = serializers.CharField(max_length=80, source="userinfo.related_city")
     related_zip_code = serializers.CharField(max_length=15, source="userinfo.related_zip_code")
+    related_cuit = serializers.CharField(max_length=11, source="userinfo.related_cuit")
 
     def custom_signup(self, request, user):
         profile_data = self.validated_data['userinfo']
@@ -37,6 +38,7 @@ class ProfileRegisterSerializer(RegisterSerializer):
         profile.related_cel_phone = profile_data['related_cel_phone']
         profile.related_city = profile_data['related_city']
         profile.related_zip_code = profile_data['related_zip_code']
+        profile.related_cuit = profile_data['related_cuit']
         profile.save()
 
 
@@ -49,9 +51,10 @@ class UserSerializer(UserDetailsSerializer):
     related_cel_phone = serializers.CharField(max_length=15, source="userinfo.related_cel_phone")
     related_city = serializers.CharField(max_length=80, source="userinfo.related_city")
     related_zip_code = serializers.CharField(max_length=15, source="userinfo.related_zip_code")
+    related_cuit = serializers.CharField(max_length=11, source="userinfo.related_cuit")
 
     class Meta(UserDetailsSerializer.Meta):
-        fields = ('email', 'related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code')
+        fields = ('email', 'related_name', 'related_last_name', 'related_customer_name', 'related_customer_address', 'related_telephone', 'related_cel_phone', 'related_city', 'related_zip_code', 'related_cuit')
         read_only_fields = ('email',)
     
     def update(self, instance, validated_data):
@@ -64,12 +67,13 @@ class UserSerializer(UserDetailsSerializer):
         related_cel_phone = profile_data.get('related_cel_phone')
         related_city = profile_data.get('related_city')
         related_zip_code = profile_data.get('related_zip_code')
+        related_cuit = profile_data.get('related_cuit')
 
         instance = super(UserSerializer, self).update(instance, validated_data)
 
         # get and update user profile
         profile = instance.userinfo
-        if profile_data and related_name and related_last_name and related_customer_name and related_customer_address and related_cel_phone and related_city and related_zip_code:
+        if profile_data and related_name and related_last_name and related_customer_name and related_customer_address and related_cel_phone and related_city and related_zip_code and related_cuit:
             profile.related_name = related_name
             profile.related_last_name = related_last_name
             profile.related_customer_name = related_customer_name
@@ -78,6 +82,7 @@ class UserSerializer(UserDetailsSerializer):
             profile.related_cel_phone = related_cel_phone
             profile.related_city = related_city
             profile.related_zip_code = related_zip_code
+            profile.related_cuit = related_cuit
             profile.save()
         return instance
 
@@ -115,6 +120,18 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Products
         fields = ('product_id', 'name', 'brand', 'product_line', 'unit', 'price', 'offer', 'offer_price', 'package', 'images',)
+
+
+class ImagesSerializer(serializers.ModelSerializer):
+    image_relative_url = serializers.SerializerMethodField()
+
+    class Meta:
+        model = ProductImages
+        fields = ('product_id', 'image_relative_url',)
+    
+    # Get relative path
+    def get_image_relative_url(self, obj):
+        return obj.image.url
 
 
 class AccountBalanceSerializer(serializers.ModelSerializer):

@@ -22,6 +22,7 @@ from django.views.generic import TemplateView
 # from app.views import SaveUserInfo
 from app.views import CustomerList, CustomerDetail
 from app.views import ProductList, ProductDetail
+from app.views import ImagesList
 from app.views import AcountBalanceDetail
 from app.views import InvoiceList, InvoiceDetail
 from app.views import OrderList, OrderDetail
@@ -51,6 +52,7 @@ urlpatterns = [
     path('rest-auth/registration/', include('rest_auth.registration.urls')),
     path('api/customer/', CustomerList.as_view()),
     path('api/customer/<customer_id>/', CustomerDetail.as_view()),
+    path('api/product/images/', ImagesList.as_view()),
     path('api/product/', ProductList.as_view()),
     path('api/product/<product_id>/', ProductDetail.as_view()),
     path('api/balance/<customer_id>/', AcountBalanceDetail.as_view()),

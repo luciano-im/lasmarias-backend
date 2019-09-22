@@ -29,6 +29,7 @@ from django.contrib.auth.models import User
 from app.models import UserInfo
 from app.models import Customer
 from app.models import Products
+from app.models import ProductImages
 from app.models import AccountBalance
 from app.models import Invoices
 from app.models import Order
@@ -37,6 +38,7 @@ from app.models import CSVFilesData
 
 from app.serializers import CustomerSerializer
 from app.serializers import ProductSerializer
+from app.serializers import ImagesSerializer
 from app.serializers import AccountBalanceSerializer
 from app.serializers import InvoiceSerializer
 from app.serializers import OrderSerializer
@@ -75,6 +77,23 @@ class ProductDetail(generics.ListAPIView):
     def get_queryset(self):
         product_id = self.kwargs['product_id']
         return Products.objects.filter(id=product_id)
+
+
+class ImagesList(generics.ListAPIView):
+    queryset = ProductImages.objects.all()
+    serializer_class = ImagesSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = self.get_serializer(queryset, many=True)
+
+        image = ProductImages.objects.order_by('-date').values('date').first()
+
+        response_list = serializer.data 
+        response = Response(response_list)
+        response['Update-Date'] = image['date'].strftime("%Y-%m-%d %H:%M:%S")
+        return response
 
 
 class AcountBalanceDetail(generics.ListAPIView):
