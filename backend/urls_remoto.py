@@ -31,7 +31,6 @@ from app.views import SendConfirmEmail
 from app.views import ExportOrder
 from app.views import CustomLoginView
 from app.views import PublishMessage
-from app.views import updatetask
 
 from allauth.account.views import AccountInactiveView
 
@@ -75,7 +74,4 @@ urlpatterns = [
 
     # Home
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
-
-    # Update extranet
-    path('update/<task>/', updatetask, name='updatetask'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT) + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
