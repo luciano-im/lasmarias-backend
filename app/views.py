@@ -8,6 +8,7 @@ from django.contrib.sites.models import Site
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponse
+from django.http import Http404
 from django.shortcuts import render
 from django.db.models import Q
 
@@ -48,6 +49,9 @@ from app.permissions import SellerPermission
 from app.permissions import HasPermissionOrSeller
 
 from app.admin import OrderResource
+
+from app import import_tasks
+
 
 class CustomerList(generics.ListAPIView):
     queryset = Customer.objects.all()
@@ -284,3 +288,25 @@ def PublishMessage(request):
     
     html = "<html><body><h1>Mensaje enviado.</h1></body></html>"
     return HttpResponse(html)
+
+
+@staff_member_required
+def updatetask(request, task):
+
+	if task == 'customer':
+		import_tasks.importCustomer()
+	elif task == 'products':
+		import_tasks.importProducts()
+	elif task == 'account':
+		import_tasks.importAccountBalance()
+	elif task == 'invoices':
+		import_tasks.importInvoices()
+	elif datatype == 'all':
+		import_tasks.importCustomer()
+		import_tasks.importProducts()
+		import_tasks.importAccountBalance()
+		import_tasks.importInvoices()
+	else:
+		raise Http404()
+
+	return render(request, 'update_extranet.html')

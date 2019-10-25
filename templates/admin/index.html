@@ -56,10 +56,22 @@
 {% block sidebar %}
 <div id="content-related">
     <div class="module" id="bookmarks">
-      <h2>{% trans 'Acciones' %}</h2>
+      <h2>{% trans 'Actualización Manual' %}</h2>
       <ul>
         <li>
-          <a href="#">Actualizar Base de Datos</a>
+            <a href="/update/customer/">Actualizar Clientes</a>
+        </li>
+        <li>
+            <a href="/update/products/">Actualizar Productos</a>
+        </li>
+        <li>
+            <a href="/update/account/">Actualizar Saldos de Ctas. Ctes.</a>
+        </li>
+        <li>
+            <a href="/update/invoices/">Actualizar Facturas</a>
+        </li>
+        <li>
+            <a href="/update/all/">Actualización Completa</a>
         </li>
       </ul>
     </div>

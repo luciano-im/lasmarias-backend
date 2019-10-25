@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% load static from staticfiles %}
+{% load i18n %}
+
+{% block pagetitle %}Las Marías - Actualizacion{% endblock %}
+
+{% block head %}
+{% endblock %}
+
+{% block title %}
+  {% if error %}
+    ¡Ha ocurrido un error!
+  {% else %}
+    ¡Actualización correcta!
+  {% endif %}
+{% endblock %}
+
+{% block content %}
+  {% if error %}
+    <p>Los datos <span class="highlight">NO</span> han podido ser actualizados.</p>
+  {% else %}
+    <p style="text-align: center;">La Extranet <span class="highlight">se actualizo correctamente</span></p>
+    <div style="text-align: center; margin: 6em 0 3em 0;">
+      <a href="/admin/" style="color:white; background-color: #009B97; padding: .8em; border-radius: 2px; text-decoration: none;">VOLVER AL <span>ADMINISTRADOR</span></a>
+    </div>
+  {% endif %}
+{% endblock %}
+
+{% block contact %}
+<h2>Ante cualquier inconveniente no dude en contactar al servicio técnico de Agencia LB.</h2>
+{% endblock %}
+
+{% block scriptjs %}
+{% endblock %}
